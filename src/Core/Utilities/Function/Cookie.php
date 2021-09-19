@@ -1,8 +1,8 @@
 <?php
 
-namespace Funnelnek\Core\Function;
+namespace Funnelnek\Core\Utilities\Function;
 
-use Funnelnek\Core\Module\Cookie;
+use Funnelnek\Core\HTTP\Cookie;
 
 /**
  * Method parse_request_cookies

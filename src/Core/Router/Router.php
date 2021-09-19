@@ -1,9 +1,11 @@
 <?php
 
-namespace Funnelnek\Core\Module;
+namespace Funnelnek\Core\Router;
 
 use Exception;
 use Funnelnek\Core\Exception\HTTP\NotFoundException;
+use Funnelnek\Core\HTTP\Request;
+use Funnelnek\Core\HTTP\Response;
 use Funnelnek\Core\Interfaces\IRouter;
 use const Funnelnek\Configuration\Constant\{PATH_PARAM_PATTERN, PARAMS_REPLACEMENT_PATTERN, PATH_WILDCARD_PATTERN};
 

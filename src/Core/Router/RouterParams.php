@@ -1,6 +1,6 @@
 <?php
 
-namespace Funnelnek\Core\Module;
+namespace Funnelnek\Core\Router;
 
 use Funnelnek\Core\Interfaces\IRouteParams;
 

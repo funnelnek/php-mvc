@@ -1,10 +1,10 @@
 <?php
 
-namespace Funnelnek\Core\Function;
+namespace Funnelnek\Core\Utilities\Function;
 
 use Funnelnek\Configuration\Constant\Settings;
-use Funnelnek\Core\Module\RouteParam;
-use Funnelnek\Core\Module\RouterParams;
+use Funnelnek\Core\Router\RouteParam;
+use Funnelnek\Core\Router\RouterParams;
 
 
 /**

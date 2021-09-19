@@ -1,12 +1,12 @@
 <?php
 
-namespace Funnelnek\Core\Module;
+namespace Funnelnek\Core\HTTP;
 
 use Funnelnek\Configuration\Constant\Settings;
 
 include Settings::ROOT_PATH . '/Core/Function/CacheControl.php';
 
-use function Funnelnek\Core\Function\{get_request_cache_control};
+use function Funnelnek\Core\Utilities\Function\{get_request_cache_control};
 
 
 class RequestHeader

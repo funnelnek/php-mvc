@@ -1,11 +1,13 @@
 <?php
 
-namespace Funnelnek\Core\Module;
+namespace Funnelnek\Core\HTTP;
 
 use Exception;
 use Funnelnek\Configuration\Constant\Settings;
 use Funnelnek\Core\Attribute\Service\InjectionStrategy;
-use function Funnelnek\Core\Function\{get_request_body, get_request_cookies};
+use Funnelnek\Core\Module\Application;
+
+use function Funnelnek\Core\Utilities\Function\{get_request_body, get_request_cookies};
 
 
 include_once Settings::ROOT_PATH . '/Core/Function/Cookie.php';
@@ -16,7 +18,6 @@ final class Request
 {
     protected static Request $instance;
     protected RequestHeader $header;
-    protected RouterParams $params;
     protected HttpQuery $query;
     protected string $path = '/';
     protected string $url;

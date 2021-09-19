@@ -1,6 +1,6 @@
 <?php
 
-namespace Funnelnek\Core\Function;
+namespace Funnelnek\Core\Utilities\Function;
 
 function get_request_body()
 {

@@ -3,6 +3,10 @@
     "description": "Simple PHP MVC Framework",
     "type": "library",
     "license": "MIT",
+    "support": {
+        "issues": "https://github.com/funnelnek/php-mvc/issues",
+        "source": "https://github.com/funnelnek/php-mvc"
+    },
     "authors": [{
         "name": "Robert Banks",
         "email": "seoinsighters@gmail.com"

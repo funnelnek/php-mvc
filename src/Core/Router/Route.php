@@ -1,16 +1,16 @@
 <?php
 
-namespace Funnelnek\Core\Module;
+namespace Funnelnek\Core\Router;
 
 use Closure;
 
 use Funnelnek\Core\Interfaces\IMiddleware;
 use Funnelnek\Core\Interfaces\IRoute;
-use Funnelnek\Core\Module\Router;
+use Funnelnek\Core\Router;
 
-use function Funnelnek\Core\Function\convert_route_pattern;
-use function Funnelnek\Core\Function\get_params;
-use function Funnelnek\Core\Function\has_params;
+use function Funnelnek\Core\Utilities\Function\convert_route_pattern;
+use function Funnelnek\Core\Utilities\Function\get_params;
+use function Funnelnek\Core\Utilities\Function\has_params;
 
 
 class Route implements IRoute
@@ -29,8 +29,7 @@ class Route implements IRoute
         protected string $method,
         protected string $path,
         protected string|array|Closure $controller,
-        protected bool $exact = false,
-        protected ?Router $router = null
+        protected bool $exact = false
     ) {
         if (has_params($path)) {
             $this->params = get_params($path);

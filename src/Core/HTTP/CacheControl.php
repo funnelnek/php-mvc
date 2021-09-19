@@ -1,6 +1,6 @@
 <?php
 
-namespace Funnelnek\Core\Module;
+namespace Funnelnek\Core\HTTP;
 
 class CacheControl
 {
