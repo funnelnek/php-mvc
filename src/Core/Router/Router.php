@@ -21,6 +21,7 @@ class Router implements IRouter
     protected static string $controllerSuffix = "controller";
 
 
+
     /**
      * Method __construct
      *
@@ -104,20 +105,21 @@ class Router implements IRouter
     }
 
     /**
-     * Method match
+     * Checks for matching routes that matches the currect 
+     * URL request. 
      *
-     * @param string $route [explicite description]
+     * @param string $permalink [explicite description]
      *
      * @return bool
      */
-    public function match(string $route): bool
+    public function match(string $permalink): bool
     {
         $path = self::$currentRoute->path();
         $method = $this->request->getMethod();
         $inputs = [];
         foreach ($this->routes[$method] as $pattern => $route) {
 
-            if (preg_match($pattern, $path, $params, PREG_OFFSET_CAPTURE)) {
+            if (preg_match($pattern, $permalink, $params, PREG_OFFSET_CAPTURE)) {
 
                 foreach ($params as $match => $value) {
                     if (is_string($match)) {

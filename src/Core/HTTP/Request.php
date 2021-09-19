@@ -7,16 +7,16 @@ use Funnelnek\Configuration\Constant\Settings;
 use Funnelnek\Core\Attribute\Service\InjectionStrategy;
 use Funnelnek\Core\Module\Application;
 
-use function Funnelnek\Core\Utilities\Function\{get_request_body, get_request_cookies};
-
-
-include_once Settings::ROOT_PATH . '/Core/Function/Cookie.php';
-include_once Settings::ROOT_PATH . '/Core/Function/Request.php';
-
-#[InjectionStrategy(strategy: 'singleton')]
-final class Request
+class Request
 {
-    protected static Request $instance;
+    public function __construct(Application $app)
+    {
+        $this->path = $app->pathinfo;
+    }
+    protected static bool $isInitialized = false;
+    protected static array|null $queries;
+    protected static array $headers;
+
     protected RequestHeader $header;
     protected HttpQuery $query;
     protected string $path = '/';
@@ -24,23 +24,13 @@ final class Request
     protected string $method;
     protected string $id;
     protected array $body;
+
     protected array $cookies = [];
 
-    private function __construct()
+    protected static function create(Request $instance)
     {
-        if (!isset(self::$instance)) {
-            self::$instance = $this;
-            $this->id = random_bytes(32);
-            $this->header = new RequestHeader();
-            $this->query = new HttpQuery();
-            $this->path = Application::$path;
-            $this->method = Application::$method;
-            $this->url = Application::$url;
-            $this->cookies = get_request_cookies();
-            $this->body = get_request_body();
-        }
-        return self::$instance;
     }
+
     public function getPath()
     {
         return $this->path;
@@ -62,28 +52,5 @@ final class Request
     public function getCookies()
     {
         return $this->cookies;
-    }
-
-    public static function getInstance()
-    {
-        if (!isset(self::$instance)) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-
-    /**
-     * prevent the instance from being cloned (which would create a second instance of it)
-     */
-    private function __clone()
-    {
-    }
-
-    /**
-     * prevent from being unserialized (which would create a second instance of it)
-     */
-    public function __wakeup()
-    {
-        throw new Exception("Cannot unserialize singleton");
     }
 }

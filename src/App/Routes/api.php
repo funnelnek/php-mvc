@@ -4,5 +4,5 @@
 
 namespace Funnelnek\App\Routes\Api;
 
-use Funnelnek\App\Controller\ProductController;
+use Funnelnek\App\Controller\ProductsController;
 use Funnelnek\Core\Module\Route;

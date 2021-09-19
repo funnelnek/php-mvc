@@ -12,7 +12,7 @@ class InjectionStrategy
     const TRANSIENT = 'TRANSIENT';
 
 
-    public function __construct(string $strategy)
+    public function __construct(public string $strategy)
     {
         switch ($strategy) {
             case 'singleton':

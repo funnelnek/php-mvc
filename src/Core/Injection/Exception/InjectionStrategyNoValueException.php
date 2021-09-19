@@ -1,6 +1,6 @@
 <?php
 
-namespace Funnelnek\Core\Container\Exception;
+namespace Funnelnek\Core\Injection\Exception;
 
 use Funnelnek\Core\Exception\Exception;
 

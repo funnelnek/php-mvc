@@ -4,8 +4,8 @@ namespace Funnelnek\App\Service;
 
 use Funnelnek\Configuration\Constant\Settings;
 use Funnelnek\Core\Attribute\Service\InjectionStrategy;
-use Funnelnek\Core\Module\Router;
-use Funnelnek\Core\Module\ServiceProvider;
+use Funnelnek\Core\Router\Router;
+use Funnelnek\Core\Service\ServiceProvider;
 
 
 

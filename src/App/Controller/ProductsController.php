@@ -14,18 +14,18 @@ use Funnelnek\Core\Attribute\Http\Router\Route;
 use Funnelnek\Core\Attribute\Http\Router\Rewrite;
 use Funnelnek\Core\Attribute\Http\Router\RouteParam;
 use Funnelnek\Core\Controller\Controller;
-use Funnelnek\Core\Module\Request;
+use Funnelnek\Core\HTTP\Request;
 
 
 #[RouteParam(name: "product", pattern: "\d+")]
 #[Rewrite("/")]
 #[APIController(endpoint: '/products')]
-class ProductController extends Controller
+class ProductsController extends Controller
 {
 
     #[Get]
     #[Route(path: '/', exact: true)]
-    public function index(
+    public static function index(
         ProductRepository $repo,
         Request $req
     ) {

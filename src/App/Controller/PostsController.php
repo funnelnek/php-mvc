@@ -10,7 +10,7 @@ use Funnelnek\Core\Attribute\Http\Router\RouteParam;
 
 #[RouteParam(name: 'post')]
 #[APIController(endpoint: "/posts")]
-class PostController extends Controller
+class PostsController extends Controller
 {
     #[HttpGet]
     #[Route(path: "/{post}")]

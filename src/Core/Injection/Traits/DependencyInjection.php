@@ -4,9 +4,9 @@ namespace Funnelnek\Core\Injection\Traits;
 
 
 use Funnelnek\Core\Attribute\Service\InjectionStrategy;
-use Funnelnek\Core\Container\Exception\DependencyNoDefaultValueException;
-use Funnelnek\Core\Container\Exception\InjectionStrategyNoValueException;
-use Funnelnek\Core\Container\Exception\NotInstantiableException;
+use Funnelnek\Core\Injection\Exception\DependencyNoDefaultValueException;
+use Funnelnek\Core\Injection\Exception\InjectionStrategyNoValueException;
+use Funnelnek\Core\Injection\Exception\NotInstantiableException;
 use Funnelnek\Core\Injection\Injector;
 use ReflectionAttribute;
 use ReflectionClass;
@@ -93,7 +93,7 @@ trait DependencyInjection
 
         if (!empty($injection)) {
             $injection = $injection[0];
-            $strategy = $injection->getArguments()[0];
+            $strategy = $injection->getArguments()['strategy'];
             if (!isset($strategy)) {
                 throw new InjectionStrategyNoValueException("Injection Strategy is missing strategy type");
             }

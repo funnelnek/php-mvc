@@ -2,54 +2,19 @@
 
 namespace Funnelnek\Core\Module;
 
-use Exception;
+use Funnelnek\Core\Exception\Exception;
 use Funnelnek\App\Service\AppServicesProvider;
 use Funnelnek\Configuration\Constant\Settings;
 use Funnelnek\Core\Exception\HTTP\BadRequestException;
 use Funnelnek\Core\HTTP\Request;
 use Funnelnek\Core\HTTP\Response;
+use Funnelnek\Core\Injection\Traits\DependencyInjection;
 use Funnelnek\Core\Module\Configuration;
 use Funnelnek\Core\Router\Router;
 
 final class Application
 {
-    public const Name = "Funnelnek";
-    public const VERSION = "1.0.0";
-
-
-    public static Configuration $configuration;
-
-    public static string $ip;
-    public static string $hostname;
-    public static string $phpVersion;
-    public static string $user;
-    public static string $serverName;
-    public static string $serverPort;
-    public static string $serverSoftware;
-    public static string $protocol;
-    public static string $publicDir;
-    public static string $path;
-    public static string $remoteAddr;
-    public static string $remotePort;
-    public static string $url;
-    public static string $scriptName;
-    public static string $method;
-    public static string $query;
-    public static string $filename;
-    public static string $fcgiRole;
-    public static string $httpConnection;
-    public static string $accepts;
-    public static string $userAgent;
-    public static string $httpHost;
-    public static string $redirectStatus;
-    public static string $httpLang;
-    public Router $router;
-    public Request $request;
-    public Response $response;
-
-
-    private static Application $instance;
-
+    use DependencyInjection;
     private function __construct()
     {
         // Getting server info.
@@ -77,14 +42,46 @@ final class Application
         self::$httpHost = $_SERVER['HTTP_HOST'];
         self::$redirectStatus = $_SERVER['REDIRECT_STATUS'];
         self::$httpLang = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+        self::$configuration = new Configuration($this);
 
-        // app's configuration.
-        self::$configuration = new Configuration();
-
-        // $this->request = Request::getInstance();
-        // $this->router = Router::getInstance();
-        // $this->response = new Response();
+        $this->builder = new ApplicationBuilder($this);
     }
+
+    public const Name = "Funnelnek";
+    public const VERSION = "1.0.0";
+    public static Configuration $configuration;
+    public static string $ip;
+    public static string $hostname;
+    public static string $phpVersion;
+    public static string $user;
+    public static string $serverName;
+    public static string $serverPort;
+    public static string $serverSoftware;
+    public static string $protocol;
+    public static string $publicDir;
+    public static string $path;
+    public static string $remoteAddr;
+    public static string $remotePort;
+    public static string $url;
+    public static string $scriptName;
+    public static string $method;
+    public static string $query;
+    public static string $filename;
+    public static string $fcgiRole;
+    public static string $httpConnection;
+    public static string $accepts;
+    public static string $userAgent;
+    public static string $httpHost;
+    public static string $redirectStatus;
+    public static string $httpLang;
+    public Router $router;
+    public Request $request;
+    public Response $response;
+    private static Application $instance;
+
+    private ApplicationBuilder $builder;
+
+
 
     //Run Application
     public static function run()
@@ -120,7 +117,7 @@ final class Application
     private function boot()
     {
         // Run app's services.
-        AppServicesProvider::run();
+        //AppServicesProvider::run();
     }
 
     /**
@@ -145,6 +142,20 @@ final class Application
         foreach ($controllers as $controller) {
             preg_match('/([a-zA-Z]+Controller)\.php$/', $controller, $match);
             $control =  $namespace . $match[1];
+        }
+    }
+
+    public function __get($prop)
+    {
+        switch ($prop) {
+            case "pathinfo":
+                return self::$path;
+            case "config":
+                return self::$configuration;
+            case "isInstalled":
+                return self::$configuration->isInstalled();
+            default:
+                throw new Exception("");
         }
     }
 }

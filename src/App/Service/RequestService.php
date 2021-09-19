@@ -8,7 +8,7 @@ use Funnelnek\Core\HTTP\Request;
 use Funnelnek\Core\Service\ServiceProvider;
 
 
-#[InjectionStrategy('singleton')]
+#[InjectionStrategy(strategy: 'singleton')]
 class RequestService extends ServiceProvider
 {
 

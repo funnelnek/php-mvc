@@ -1,9 +1,9 @@
 <?php
 
-namespace Funnelnek\Core\Container\Exception;
+namespace Funnelnek\Core\Injection\Exception;
 
-use Exception;
+use Funnelnek\Core\Injection\Exception\DependencyInjectionException;
 
-class NotInstantiableException extends Exception
+class NotInstantiableException extends DependencyInjectionException
 {
 }

@@ -4,6 +4,6 @@ namespace Funnelnek\App\Controller;
 
 use Funnelnek\Core\Controller\Controller;
 
-class PageController extends Controller
+class CartsController extends Controller
 {
 }

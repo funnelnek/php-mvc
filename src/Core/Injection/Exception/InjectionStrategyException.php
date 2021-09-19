@@ -2,6 +2,6 @@
 
 namespace Funnelnek\Core\Injection\Exception;
 
-class InjectionStrategyException
+class InjectionStrategyException implements IDependencyInjectionException
 {
 }

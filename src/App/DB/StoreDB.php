@@ -2,6 +2,8 @@
 
 namespace Funnelnek\App\DB;
 
+use Funnelnek\App\Controller\CategoriesController;
+use Funnelnek\App\Controller\ProductsController;
 use Funnelnek\App\Model\Category;
 use Funnelnek\App\Model\Product;
 use Funnelnek\App\Repository\CategoryRepository;
@@ -11,9 +13,9 @@ use Funnelnek\Core\Data\Attribute\DBSet;
 
 class StoreDB extends DBContext
 {
-    #[DBSet(Product::class)]
+    #[DBSet(Product::class, ProductsController::class)]
     protected ProductRepository $Products;
 
-    #[DBSet(Category::class)]
-    protected CategoryRepository $Catalogs;
+    #[DBSet(Category::class, CategoriesController::class)]
+    protected CategoryRepository $Categories;
 }

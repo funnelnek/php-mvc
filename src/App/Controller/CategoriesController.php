@@ -17,7 +17,7 @@ use Funnelnek\Core\Controller\Controller;
 
 #[RouteParam(name: 'category')]
 #[APIController(endpoint: '/categories')]
-class CategoryController extends Controller
+class CategoriesController extends Controller
 {
     #[HttpGet]
     #[Route(path: '/', exact: true)]

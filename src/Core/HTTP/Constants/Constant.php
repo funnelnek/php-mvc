@@ -3,7 +3,7 @@
 namespace Funnelnek\Configuration\Constant\Http;
 
 
-class SupportsHttpMethod
+class HttpMethodSupported
 {
     public const GET = 1;
     public const POST = 1;

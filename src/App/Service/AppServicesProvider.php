@@ -4,7 +4,7 @@ namespace Funnelnek\App\Service;
 
 use Funnelnek\Configuration\Constant\Settings;
 use Funnelnek\Core\Service\ServiceProvider;
-use Funnelnek\Core\Traits\DependencyInjection;
+use Funnelnek\Core\Injection\Traits\DependencyInjection;
 
 
 class AppServicesProvider extends ServiceProvider
@@ -29,7 +29,7 @@ class AppServicesProvider extends ServiceProvider
         }
 
         // This is a test remove when done.
-        self::get(RequestService::class);
+        //self::get(RequestService::class);
     }
 
     /**
