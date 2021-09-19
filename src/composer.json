@@ -1,0 +1,25 @@
+{
+    "name": "funnelnek/mvc",
+    "description": "Simple PHP MVC Framework",
+    "type": "library",
+    "license": "MIT",
+    "authors": [{
+        "name": "Robert Banks",
+        "email": "seoinsighters@gmail.com"
+    }],
+    "autoload": {
+        "psr-4": {
+            "Funnelnek\\": "."
+        }
+    },    
+    "require": {
+        "vlucas/phpdotenv": "^5.0",
+        "phpunit/phpunit":"^9",
+        "ext-mbstring": "*",
+        "ext-iconv": "*",
+        "ext-pdo": "*",
+        "ext-json": "*",
+        "ext-curl": "*",
+        "ext-simplexml": "*"
+    }
+}
