@@ -1,6 +1,6 @@
 <?php
 
-namespace Funnelnek\Core\Interfaces;
+namespace Funnelnek\Core\Service\Interfaces;
 
 interface IServiceProvider
 {

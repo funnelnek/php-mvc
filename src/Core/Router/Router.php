@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Funnelnek\Core\Router;
 
 use Exception;
 use Funnelnek\Core\Exception\HTTP\NotFoundException;
 use Funnelnek\Core\HTTP\Request;
 use Funnelnek\Core\HTTP\Response;
-use Funnelnek\Core\Interfaces\IRouter;
+use Funnelnek\Core\Router\Interfaces\IRouter;
 use const Funnelnek\Configuration\Constant\{PATH_PARAM_PATTERN, PARAMS_REPLACEMENT_PATTERN, PATH_WILDCARD_PATTERN};
 
 class Router implements IRouter
@@ -16,6 +18,8 @@ class Router implements IRouter
     protected static Route $currentRoute;
     protected static Router $instance;
     protected static string $originalPath;
+    protected static string $controllerSuffix = "controller";
+
 
     /**
      * Method __construct
@@ -36,8 +40,9 @@ class Router implements IRouter
      *
      * @return void
      */
-    public function resolve()
+    public function resolve(Request $req, Response $res): string
     {
+        return "Not Implemented";
     }
     /**
      * Method registerParam
@@ -54,6 +59,8 @@ class Router implements IRouter
     public function redirect(array|string|callable $controller)
     {
     }
+
+
     public function rewrite(string $url)
     {
     }
@@ -82,13 +89,9 @@ class Router implements IRouter
     }
 
     /**
-     * Register a request handler
-     * 
-     * @param $method - The request HTTP method.
-     * @param $path - The request url path.
-     * @param $controller - The handler for the request.
+     * @inheritDoc
      */
-    public function register(Route $route)
+    public function register(Route $route): void
     {
         // Add route and controller to the provided method.
         $this->routes[$route->getMethod()][$route->getRoute()] = $route;
@@ -100,9 +103,14 @@ class Router implements IRouter
         }
     }
 
-
-    // Checks if url matches defined routes.
-    public function match(): bool
+    /**
+     * Method match
+     *
+     * @param string $route [explicite description]
+     *
+     * @return bool
+     */
+    public function match(string $route): bool
     {
         $path = self::$currentRoute->path();
         $method = $this->request->getMethod();
@@ -121,5 +129,16 @@ class Router implements IRouter
             }
         }
         return false;
+    }
+
+    /**
+     * Method dispatch
+     *
+     * @param string $url [explicite description]
+     *
+     * @return void
+     */
+    public function dispatch(string $url): void
+    {
     }
 }

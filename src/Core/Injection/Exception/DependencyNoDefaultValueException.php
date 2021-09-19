@@ -1,10 +1,9 @@
 <?php
 
-namespace Funnelnek\Core\Container\Exception;
+namespace Funnelnek\Core\Injection\Exception;
 
-use Exception;
+use Funnelnek\Core\Injection\Exception\DependencyInjectionException;
 
-class DependencyNoDefaultValueException extends Exception implements NotFoundExceptionInterface
+class DependencyNoDefaultValueException extends DependencyInjectionException
 {
-
 }

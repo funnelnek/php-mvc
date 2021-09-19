@@ -6,7 +6,10 @@ use Exception;
 use Funnelnek\App\Service\AppServicesProvider;
 use Funnelnek\Configuration\Constant\Settings;
 use Funnelnek\Core\Exception\HTTP\BadRequestException;
+use Funnelnek\Core\HTTP\Request;
+use Funnelnek\Core\HTTP\Response;
 use Funnelnek\Core\Module\Configuration;
+use Funnelnek\Core\Router\Router;
 
 final class Application
 {
@@ -69,7 +72,6 @@ final class Application
         self::$query = $_SERVER['QUERY_STRING'];
         self::$filename = $_SERVER['SCRIPT_FILENAME'];
         self::$fcgiRole = $_SERVER['FCGI_ROLE'];
-        self::$httpConnection = $_SERVER['HTTP_CONNECTION'];
         self::$accepts = $_SERVER['HTTP_ACCEPT'];
         self::$userAgent = $_SERVER['HTTP_USER_AGENT'];
         self::$httpHost = $_SERVER['HTTP_HOST'];
@@ -81,7 +83,7 @@ final class Application
 
         // $this->request = Request::getInstance();
         // $this->router = Router::getInstance();
-        $this->response = new Response();
+        // $this->response = new Response();
     }
 
     //Run Application
@@ -94,7 +96,7 @@ final class Application
             throw new BadRequestException();
         }
 
-        // Check if the app is already instantiated.
+        //Check if the app is already instantiated.
         if (!isset(self::$instance)) {
             $app = new Application();
             $app->boot();

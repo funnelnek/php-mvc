@@ -1,6 +1,6 @@
 <?php
 
-namespace Funnelnek\Core\Traits;
+namespace Funnelnek\Core\Injection\Traits;
 
 
 use Funnelnek\Core\Attribute\Service\InjectionStrategy;
