@@ -10,8 +10,10 @@ use Funnelnek\Core\Data\Interfaces\IRepository;
 class DBSet
 {
     public function __construct(
-        protected IModel $schema,
-        protected ?IRepository $repositroy = null,
+        protected string $schema,
+        protected string $repository,
+        protected ?string $controller = null,
+        protected ?string $name = null,
         protected string $charset = 'utf8mb4',
         protected string $collate = 'utf8mb4_general_ci',
         protected string $type = 'InnoDB'

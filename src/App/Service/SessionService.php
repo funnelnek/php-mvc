@@ -3,18 +3,16 @@
 namespace Funnelnek\App\Service;
 
 use Funnelnek\App\Repository\SessionRepository;
-use Funnelnek\Core\Attribute\Service\InjectionStrategy;
-use Funnelnek\Core\Attribute\Service\Dependency;
+use Funnelnek\Core\Injection\Attributes\InjectionStrategy;
 use Funnelnek\Core\Service\ServiceProvider;
 
 #[InjectionStrategy('transient')]
-#[Dependency(
-    [
-        SessionRepository::class
-    ]
-)]
 class SessionService extends ServiceProvider
 {
+    public function __construct(
+        protected SessionRepository $sessions
+    ) {
+    }
     public static function run()
     {
     }

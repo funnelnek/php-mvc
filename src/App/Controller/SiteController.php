@@ -3,10 +3,10 @@
 namespace Funnelnek\App\Controller;
 
 use Funnelnek\App\Service\SiteService;
-use Funnelnek\Core\Attribute\Http\Controller\APIController;
+use Funnelnek\Core\HTTP\Attributes\Controller\APIController;
 use Funnelnek\Core\Container\Container;
-use Funnelnek\Core\Module\Request;
-use Funnelnek\Core\Module\Response;
+use Funnelnek\Core\HTTP\Request;
+use Funnelnek\Core\HTTP\Response;
 
 #[APIController(endpoint: "/sites")]
 class SiteController extends Container

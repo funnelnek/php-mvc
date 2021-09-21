@@ -2,11 +2,11 @@
 
 namespace Funnelnek\App\Controller;
 
-use Funnelnek\Core\Attribute\Http\Controller\APIController;
-use Funnelnek\Core\Attribute\Http\Method\HttpGet;
-use Funnelnek\Core\Attribute\Http\Router\Route;
+use Funnelnek\Core\HTTP\Attributes\Controller\APIController;
+use Funnelnek\Core\HTTP\Attributes\Method\HttpGet;
+use Funnelnek\Core\HTTP\Attributes\Router\Route;
 use Funnelnek\Core\Controller\Controller;
-use Funnelnek\Core\Attribute\Http\Router\RouteParam;
+use Funnelnek\Core\HTTP\Attributes\Router\RouteParam;
 
 #[RouteParam(name: 'post')]
 #[APIController(endpoint: "/posts")]

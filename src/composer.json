@@ -19,11 +19,11 @@
     "require": {
         "vlucas/phpdotenv": "^5.0",
         "phpunit/phpunit":"^9",
+        "webonyx/graphql-php": "*",
         "ext-mbstring": "*",
         "ext-iconv": "*",
         "ext-pdo": "*",
         "ext-json": "*",
-        "ext-curl": "*",
-        "ext-simplexml": "*"
+        "ext-curl": "*"        
     }
 }

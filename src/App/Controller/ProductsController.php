@@ -4,53 +4,61 @@ namespace Funnelnek\App\Controller;
 
 use Funnelnek\App\Model\Product;
 use Funnelnek\App\Repository\ProductRepository;
-use Funnelnek\Core\Attribute\Http\Controller\APIController;
-use Funnelnek\Core\Attribute\Http\Method\HttpGet as Get;
-use Funnelnek\Core\Attribute\Http\Method\HttpPost as Post;
-use Funnelnek\Core\Attribute\Http\Method\HttpDelete as Delete;
-use Funnelnek\Core\Attribute\Http\Method\HttpPut as Put;
-use Funnelnek\Core\Attribute\Http\Middleware;
-use Funnelnek\Core\Attribute\Http\Router\Route;
-use Funnelnek\Core\Attribute\Http\Router\Rewrite;
-use Funnelnek\Core\Attribute\Http\Router\RouteParam;
+use Funnelnek\App\Service\ProductService;
+use Funnelnek\Configuration\Constant\Http\HttpResponseCode;
+use Funnelnek\Core\HTTP\Attributes\Controller\APIController;
+use Funnelnek\Core\HTTP\Attributes\Method\HttpGet as Get;
+use Funnelnek\Core\HTTP\Attributes\Method\HttpPost as Post;
+use Funnelnek\Core\HTTP\Attributes\Method\HttpDelete as Delete;
+use Funnelnek\Core\HTTP\Attributes\Method\HttpPut as Put;
+use Funnelnek\Core\HTTP\Attributes\Middleware\Middleware;
+use Funnelnek\Core\HTTP\Attributes\Router\Route;
+use Funnelnek\Core\HTTP\Attributes\Router\RouteParam;
 use Funnelnek\Core\Controller\Controller;
+use Funnelnek\Core\HTTP\ActionResult;
 use Funnelnek\Core\HTTP\Request;
+use Funnelnek\Core\HTTP\Response;
 
 
 #[RouteParam(name: "product", pattern: "\d+")]
-#[Rewrite("/")]
 #[APIController(endpoint: '/products')]
 class ProductsController extends Controller
 {
 
+    public function __construct(
+        private ProductService $service
+    ) {
+    }
+
     #[Get]
     #[Route(path: '/', exact: true)]
     public static function index(
-        ProductRepository $repo,
-        Request $req
+        Request $req,
+        Response $res
     ) {
     }
 
     #[Post]
     #[Route(path: '/', exact: true)]
     public static function createProduct(
-        ProductRepository $repo,
-        Product $product
+        Request $req,
+        Response $res
     ) {
     }
 
     #[Delete]
     #[Route('/{id}')]
     public static function deleteProduct(
-        ProductRepository $repo,
-        Product $product
+        Request $req,
+        Response $res
     ) {
     }
 
     #[Get]
     #[Route('/{id}')]
-    public static function findProduct(ProductRepository $repo)
+    public static function findProduct(Request $req, Response $res): ActionResult
     {
+        return new ActionResult(HttpResponseCode::OK, 'product', null);
     }
 
     #[Put]

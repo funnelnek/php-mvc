@@ -12,21 +12,13 @@ abstract class Controller extends AbstractController implements IController
     protected $payload;
 
 
-    public function __construct(
-        // protected Request $request,
-        // protected Response $response
-    )
+    public function __construct()
     {
-        //$this->payload = $request->getBody();
     }
 
     public static function render(string $view, array $params = []): string
     {
         return "Rendering View";
-    }
-
-    public static function handler()
-    {
     }
 
     public function getInputs()

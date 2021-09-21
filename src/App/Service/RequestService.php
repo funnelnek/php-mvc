@@ -2,8 +2,8 @@
 
 namespace Funnelnek\App\Service;
 
-use Funnelnek\Core\Attribute\Service\InjectionStrategy;
-use Funnelnek\Core\Attribute\Service\Dependency;
+use Funnelnek\Core\Injection\Attributes\InjectionStrategy;
+use Funnelnek\Core\Injection\Attributes\Dependency;
 use Funnelnek\Core\HTTP\Request;
 use Funnelnek\Core\Service\ServiceProvider;
 

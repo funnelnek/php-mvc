@@ -3,7 +3,7 @@
 namespace Funnelnek\App\Service;
 
 use Funnelnek\Configuration\Constant\Settings;
-use Funnelnek\Core\Attribute\Service\InjectionStrategy;
+use Funnelnek\Core\Injection\Attributes\InjectionStrategy;
 use Funnelnek\Core\Router\Router;
 use Funnelnek\Core\Service\ServiceProvider;
 
