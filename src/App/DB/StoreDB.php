@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Funnelnek\App\DB;
 
 use Funnelnek\App\Controller\CategoriesController;
@@ -12,9 +14,16 @@ use Funnelnek\App\Service\CatalogService;
 use Funnelnek\App\Service\ProductService;
 use Funnelnek\Core\Data\DBContext;
 use Funnelnek\Core\Data\Attribute\DBSet;
+use Funnelnek\Core\Data\DatabaseConnection;
 
-class StoreDB extends DBContext
+#[DBContext(
+    DRIVER: DatabaseConnection::class,
+)]
+class StoreDB
 {
+    public function __construct()
+    {
+    }
     #[DBSet(
         name: "products",
         schema: Product::class,
