@@ -15,4 +15,8 @@ class DataMigration
     protected string $version;
     protected string $hash;
     protected string $file;
+
+    public function getLastMigration()
+    {
+    }
 }

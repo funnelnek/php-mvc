@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Funnelnek\Core\Router;
 
 use Exception;
-use Funnelnek\Core\Exception\HTTP\NotFoundException;
+use Funnelnek\Core\HTTP\Exception\NotFoundException;
 use Funnelnek\Core\HTTP\Request;
 use Funnelnek\Core\HTTP\Response;
 use Funnelnek\Core\Router\Interfaces\IRouter;
@@ -19,7 +19,6 @@ class Router implements IRouter
     protected static Router $instance;
     protected static string $originalPath;
     protected static string $controllerSuffix = "controller";
-
 
 
     /**
@@ -43,7 +42,10 @@ class Router implements IRouter
      */
     public function resolve(Request $req, Response $res): string
     {
-        return "Not Implemented";
+        try {
+        } catch (NotFoundException $exception) {
+        }
+        return "";
     }
     /**
      * Method registerParam

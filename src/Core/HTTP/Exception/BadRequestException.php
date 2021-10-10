@@ -1,6 +1,6 @@
 <?php
 
-namespace Funnelnek\Core\Exception\HTTP;
+namespace Funnelnek\Core\HTTP\Exception;
 
 use Funnelnek\Core\Exception\Exception;
 use Throwable;
