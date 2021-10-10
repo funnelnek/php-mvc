@@ -17,6 +17,7 @@ class DBContext
     public function __construct(
 
         protected string $driver,
+        protected string $configuration
 
     ) {
         //@TODO: Construct Database Context

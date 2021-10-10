@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Funnelnek\App\DB;
+namespace Funnelnek\App\DB\Attributes;
 
 use Funnelnek\App\Controller\CategoriesController;
 use Funnelnek\App\Controller\ProductsController;
@@ -12,25 +12,26 @@ use Funnelnek\App\Repository\CategoryRepository;
 use Funnelnek\App\Repository\ProductRepository;
 use Funnelnek\App\Service\CatalogService;
 use Funnelnek\App\Service\ProductService;
+use Funnelnek\Configuration\DB\StoreDatabaseConfiguration;
 use Funnelnek\Core\Data\DBContext;
 use Funnelnek\Core\Data\Attribute\DBSet;
-use Funnelnek\Core\Data\DatabaseConnection;
+use Funnelnek\Core\Data\DatabaseContext;
+use PDO;
+
 
 #[DBContext(
-    DRIVER: DatabaseConnection::class,
+    driver: PDO::class,
+    configuration: StoreDatabaseConfiguration::class,
 )]
-class StoreDB
+class StoreDB extends DatabaseContext
 {
-    public function __construct()
-    {
-    }
     #[DBSet(
         name: "products",
         schema: Product::class,
         repository: ProductRepository::class,
         controller: ProductsController::class
     )]
-    protected ProductService $Products;
+    public ProductService $Products;
 
     #[DBSet(
         name: 'categories',
@@ -38,5 +39,5 @@ class StoreDB
         repository: CategoryRepository::class,
         controller: CategoriesController::class
     )]
-    protected CatalogService $Categories;
+    public CatalogService $Categories;
 }

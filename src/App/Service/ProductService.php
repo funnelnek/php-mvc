@@ -9,7 +9,6 @@ class ProductService
 {
     public function __construct(
         protected ProductRepository $products,
-        protected CatalogService $catalog
     ) {
     }
 }
