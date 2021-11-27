@@ -3,9 +3,9 @@
 namespace Funnelnek\App\Repository;
 
 use Funnelnek\App\Service\DBContextService;
-use Funnelnek\Core\Attribute\Service\InjectionStrategy;
-use Funnelnek\Core\Attribute\Service\Dependency;
-use Funnelnek\Core\Module\Repository;
+use Funnelnek\Core\Injection\Attributes\InjectionStrategy;
+use Funnelnek\Core\Injection\Attributes\Dependency;
+use Funnelnek\Core\Data\Repository;
 use Funnelnek\App\Model\Session;
 
 #[InjectionStrategy('singleton')]

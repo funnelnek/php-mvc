@@ -16,6 +16,11 @@
             "Funnelnek\\": "."
         }
     },    
+    "autoload-dev": {
+        "psr-4": {
+            "Funnelnek\\Test": "./Test"
+        }
+    },
     "require": {
         "vlucas/phpdotenv": "^5.0",
         "phpunit/phpunit":"^9",

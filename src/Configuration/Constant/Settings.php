@@ -25,4 +25,8 @@ class Settings
     public const PATH_WILDCARD_REPLACEMENT = '[^\\/]';
     public const PARAMS_REPLACEMENT_PATTERN = '(?P<$1>$2)';
     public const DEFAULT_PATH_CAPTURE_PATTERN = '[[:alnum:]-]+';
+
+    // File Uploads
+    public const TEMP_FILE_UPLOAD = Settings::ROOT_PATH . '/Cache/File/Repository/Temp';
+    public const FILE_STORAGE = Settings::ROOT_PATH . '/Cache/File/Repository/Storage';
 }

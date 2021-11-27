@@ -2,10 +2,10 @@
 
 namespace Funnelnek\Core\Module;
 
-use Funnelnek\Core\Exception\Exception;
 use Funnelnek\App\Service\AppServicesProvider;
+use Funnelnek\Core\Exception\Exception;
 use Funnelnek\Configuration\Constant\Settings;
-use Funnelnek\Core\Exception\HTTP\BadRequestException;
+use Funnelnek\Core\HTTP\Exception\BadRequestException;
 use Funnelnek\Core\HTTP\Request;
 use Funnelnek\Core\HTTP\Response;
 use Funnelnek\Core\Injection\Traits\DependencyInjection;
