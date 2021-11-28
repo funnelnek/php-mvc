@@ -10,16 +10,12 @@ use Funnelnek\Core\Router\Route;
 
 interface IRouter
 {
-
-
     /**
-     * Method register
-     *
-     * @param Route $route [explicite description]
-     *
+     * Add route to routing table.
+     * @param Route $route The route instance.
      * @return void
      */
-    public function register(Route $route): void;
+    public function addRoute(Route $route): void;
 
     /**
      * Method resolve
@@ -32,10 +28,10 @@ interface IRouter
     public function resolve(Request $req, Response $res): string;
 
     /**
-     * Method dispatch
-     *
-     * @param string $url [explicite description]
-     *
+     * Dispatch route and create controller instance
+     * and execute the default method on the controller object.
+     * 
+     * @param string $url The incoming requested URL.
      * @return void
      */
     public function dispatch(string $url): void;

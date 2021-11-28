@@ -5,39 +5,42 @@ declare(strict_types=1);
 namespace Funnelnek\Core\Router;
 
 use Exception;
+use Funnelnek\Configuration\ControllerConfiguration;
 use Funnelnek\Core\HTTP\Exception\NotFoundException;
 use Funnelnek\Core\HTTP\Request;
 use Funnelnek\Core\HTTP\Response;
 use Funnelnek\Core\Router\Interfaces\IRouter;
 use const Funnelnek\Configuration\Constant\{PATH_PARAM_PATTERN, PARAMS_REPLACEMENT_PATTERN, PATH_WILDCARD_PATTERN};
 
+
 class Router implements IRouter
 {
-    protected static array $routes = [];
-    protected static RouterParams $params;
-    protected static Route $currentRoute;
-    protected static Router $instance;
-    protected static string $originalPath;
-    protected static string $controllerSuffix = "controller";
+    protected static array $routers = [];
 
+    // The index of routers array.
+    protected int $id;
+
+    // Associative array of route parameters
+    protected array $params = [];
+
+    // Associative array of routes (the routing table)
+    protected array $routes = [];
 
     /**
      * Method __construct
-     *
-     * @return void
+     * @return Router
      */
-    public function __construct(
-        protected Request $request,
-        protected Response $response
-    ) {
+    public function __construct()
+    {
+        $this->id = (count(Router::$routers) + 1);
+        Router::$routers[] = $this;
     }
 
     /**
      * Method resolve
      *
-     * @param Request $req [explicite description]
-     * @param Response $res [explicite description]
-     *
+     * @param Request $req The HTTP Request instance
+     * @param Response $res The HTTP Response instance
      * @return void
      */
     public function resolve(Request $req, Response $res): string
@@ -47,6 +50,7 @@ class Router implements IRouter
         }
         return "";
     }
+
     /**
      * Method registerParam
      *
@@ -80,43 +84,32 @@ class Router implements IRouter
     }
 
     /**
-     * Method hasParam
-     *
-     * @param string $param [explicite description]
-     *
+     * Checks to see if router has registered parameter.
+     * @param string $param The parameter to lookup.
      * @return void
      */
-    public function hasParam(string $param)
+    public function hasParam(string $param): bool
     {
-        return self::$params->hasParam($param);
+        return true;
     }
+
 
     /**
      * @inheritDoc
      */
-    public function register(Route $route): void
+    public function addRoute(Route $route): void
     {
-        // Add route and controller to the provided method.
-        $this->routes[$route->getMethod()][$route->getRoute()] = $route;
-
-        if ($route->hasParams()) {
-            foreach ($route->getParams() as $param) {
-                $this->registerParam($param);
-            }
-        }
     }
 
     /**
-     * Checks for matching routes that matches the currect 
+     * Checks for matching routes that matches the current 
      * URL request. 
      *
-     * @param string $permalink [explicite description]
-     *
+     * @param string $permalink The permalink URL.
      * @return bool
      */
     public function match(string $permalink): bool
     {
-        $path = self::$currentRoute->path();
         $method = $this->request->getMethod();
         $inputs = [];
         foreach ($this->routes[$method] as $pattern => $route) {
@@ -136,7 +129,7 @@ class Router implements IRouter
     }
 
     /**
-     * Method dispatch
+     * Dispatch original incoming requested url.
      *
      * @param string $url [explicite description]
      *

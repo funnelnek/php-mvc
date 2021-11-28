@@ -17,7 +17,7 @@ class Settings
     public const MIDDLEWARE_PATH = Settings::ROOT_PATH . '/App/Middleware';
     public const ROUTE_PATH = Settings::ROOT_PATH . '/App/Routes';
     public const SERVICE_PATH = Settings::ROOT_PATH . '/App/Service';
-    public const CONFIG_PATH = Settings::ROOT_PATH . '/Configuration';
+    public const CONFIG_PATH = Settings::ROOT_PATH . '/Configuration/';
 
     //Routing Configuration
     public const PATH_PARAM_VAR_PATTERN = '/\{(?<name>[[:alpha:]][[:alnum:]]+?)(?:\:(?<match>[^\}]+))?\}/ig';

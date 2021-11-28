@@ -7,5 +7,8 @@ use Funnelnek\Core\HTTP\Response;
 use Funnelnek\Core\Router\Route;
 
 
-Route::get(path: '*', controller: function (Request $req, Response $res) {
-}, exact: true);
+Route::get(path: '**', controller: function (Request $req, Response $res) {
+})->applyMiddleware(
+    function (Request $req, Response $res) {
+    }
+);

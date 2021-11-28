@@ -6,5 +6,6 @@ $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
 $dotenv->safeLoad();
 
 
-//Run Application
-Application::run();
+// Run Application
+// Application::run();
+echo $_SERVER["REQUEST_URI"];

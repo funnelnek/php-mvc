@@ -6,11 +6,12 @@ use Funnelnek\Core\Interfaces\IRouteParams;
 
 class RouterParams implements IRouteParams
 {
+    protected array $params = [];
 
-    public function __construct(
-        protected ?array $params = []
-    ) {
+    public function __construct()
+    {
     }
+
     /**
      * Method getParams
      *

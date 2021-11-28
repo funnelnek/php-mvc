@@ -55,26 +55,8 @@ function has_params($route)
  *
  * @return array
  */
-function get_params(string $route): ?RouteParam
+function get_params(string $route)
 {
-    $params = [];
-    if (preg_match_all(Settings::PATH_PARAM_VAR_PATTERN, $route, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE | PREG_UNMATCHED_AS_NULL)) {
-        foreach ($matches as $param) {
-            $match = $param[0];
-            $name = $param[1];
-            $pattern = $param[2];
-            $offset = $param[3];
-            $key = "{$name}";
-
-            if (is_null($pattern)) {
-                $pattern = Settings::DEFAULT_PATH_CAPTURE_PATTERN;
-            }
-
-            $params[$key] = new RouteParam(key: $match, name: $name, match: $pattern, offset: $offset);
-        }
-        return new RouterParams($params);
-    }
-    return null;
 }
 
 

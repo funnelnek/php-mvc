@@ -18,7 +18,7 @@ use Funnelnek\Core\Controller\Controller;
 use Funnelnek\Core\HTTP\ActionResult;
 use Funnelnek\Core\HTTP\Request;
 use Funnelnek\Core\HTTP\Response;
-
+use Funnelnek\Core\Module\View\RouteView;
 
 #[RouteParam(name: "product", pattern: "\d+")]
 #[APIController(endpoint: '/products')]
@@ -26,7 +26,8 @@ class ProductsController extends Controller
 {
 
     public function __construct(
-        private ProductService $service
+        private ProductService $service,
+        private RouteView $view
     ) {
     }
 
@@ -63,7 +64,7 @@ class ProductsController extends Controller
 
     #[Put]
     #[Route('/{id}')]
-    public static function updateProduct(ProductRepository $repo)
+    public static function updateProduct(Request $req, Response $res)
     {
     }
 

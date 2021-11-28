@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Funnelnek\Core\Router;
 
 use Closure;
@@ -15,36 +17,32 @@ use function Funnelnek\Core\Utilities\Function\has_params;
 
 class Route implements IRoute
 {
+    protected RouteParam $params;
+    protected string $prefix;
+    protected string $route;
+    protected array $middlewares = [];
+
+
     /**
      * Route Constructor
-     * Method __construct
-     *
      * @param string $method []
      * @param string $path []
      * @param string|array|Closure $controller []
-     * @param bool $exact []
-     * @return void
+     * @return Route
      */
     public function __construct(
         protected string $method,
         protected string $path,
-        protected string|array|Closure $controller,
-        protected bool $exact = false
+        protected string|array|Closure $controller
     ) {
         if (has_params($path)) {
             $this->params = get_params($path);
         }
         $this->route = convert_route_pattern($path);
-        //$router->register();
     }
 
-    protected RouteParam $params;
-    protected ?string $prefix;
-    protected string $route;
-
     /**
-     * Method get
-     *
+     * Adds a HTTP GET route
      * @param string $path [explicite description]
      * @param string|array|Closure $controller [explicite description]
      * @param bool $exact [explicite description]
@@ -54,9 +52,8 @@ class Route implements IRoute
     public static function get(
         string $path,
         string|array|Closure $controller,
-        bool $exact = false
-    ) {
-        return new Route(method: 'GET', path: $path, controller: $controller, exact: $exact);
+    ): Route {
+        return new Route(method: 'GET', path: $path, controller: $controller);
     }
 
     /**
@@ -68,9 +65,9 @@ class Route implements IRoute
      *
      * @return void
      */
-    public static function post(string $path, string|array|Closure $controller, bool $exact = false)
+    public static function post(string $path, string|array|Closure $controller)
     {
-        return new Route(method: 'POST', path: $path, controller: $controller, exact: $exact);
+        return new Route(method: 'POST', path: $path, controller: $controller);
     }
 
     /**
@@ -82,9 +79,9 @@ class Route implements IRoute
      *
      * @return void
      */
-    public static function put(string $path, string|array|Closure $controller, bool $exact = false)
+    public static function put(string $path, string|array|Closure $controller)
     {
-        return new Route(method: 'PUT', path: $path, controller: $controller, exact: $exact);
+        return new Route(method: 'PUT', path: $path, controller: $controller);
     }
 
     /**
@@ -96,21 +93,19 @@ class Route implements IRoute
      *
      * @return void
      */
-    public static function delete(string $path, string|array|Closure $controller, bool $exact = false)
+    public static function delete(string $path, string|array|Closure $controller)
     {
-        return new Route(method: 'DELETE', path: $path, controller: $controller, exact: $exact);
+        return new Route(method: 'DELETE', path: $path, controller: $controller);
     }
 
-    public function applyMiddleware(IMiddleware $middleware)
+    public function applyMiddleware(...$middlewares)
     {
+        $this->compose_middleware($middlewares);
     }
     public function hasParams(): bool
     {
         return isset($this->params);
     }
-    // public function resolveParams(): RouteParams
-    // {
-    // }
 
     public function param(string $param, ?string $pattern)
     {
@@ -123,7 +118,6 @@ class Route implements IRoute
      * Method setPrefix
      *
      * @param string $prefix [explicite description]
-     *
      * @return void
      */
     public function setPrefix(string $prefix)
@@ -162,5 +156,13 @@ class Route implements IRoute
     public function getParams()
     {
         return $this->params;
+    }
+
+    public function isMatch(string $url): bool
+    {
+        return preg_match($this->route, $url, $matches);
+    }
+    protected function compose_middleware(array $middlewares)
+    {
     }
 }

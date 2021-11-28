@@ -3,8 +3,7 @@
 namespace Funnelnek\Core\Module;
 
 use Funnelnek\Configuration\Constant\Settings;
-
-
+use Funnelnek\Configuration\Exception\InstallationException;
 
 class Configuration
 {
@@ -21,9 +20,15 @@ class Configuration
     {
         switch ($this->isInstalled()) {
             case false:
+                try {
+                    $this->install();
+                } catch (InstallationException $exception) {
+                    throw new InstallationException("Unable to install the application.");
+                }
             default:
                 $this->load();
         }
+        $app->configuration = $this;
     }
 
     /**
@@ -33,7 +38,7 @@ class Configuration
      */
     public function isInstalled(): bool
     {
-        return true;
+        return file_exists(Settings::CONFIG_PATH . 'uninstall.json');
     }
 
     /**
@@ -42,8 +47,21 @@ class Configuration
      * 
      * @return Configuration
      */
-    public function load(): Configuration
+    private function load(): Configuration
     {
         return $this;
+    }
+
+    /**
+     * Install the initial application.
+     * @return bool
+     */
+    private function install(): bool
+    {
+        return true;
+    }
+
+    public function configure()
+    {
     }
 }

@@ -2,34 +2,20 @@
 
 namespace Funnelnek\Core\Router;
 
+use Funnelnek\Core\Router\Exceptions\Constants\RouteParamError;
+use Funnelnek\Core\Router\Exceptions\RouteParamException;
+
+
 class RouteParam
 {
-    protected string $namespace;
-    protected array $conditions = [];
+    protected string $match;
 
     public function __construct(
-        protected string $key,
-        protected string $match,
-        protected string $name,
-        protected int $offset
+        protected string $param,
+        protected $resolver
     ) {
-        Router::registerParam($this);
-    }
-
-    public function setNamespace(string $namespace)
-    {
-        if (!isset($this->namespace)) {
-            $this->namespace = $namespace;
+        if (!is_callable($resolver)) {
+            throw new RouteParamException(RouteParamError::INVALID_RESOLVER);
         }
-    }
-
-    public function getNamespace()
-    {
-        return $this->namespace . "";
-    }
-
-    public function withCondition(string $condition, ?string $flag = "LOOKAHEAD")
-    {
-        $this->conditions[$flag][$condition] = $condition;
     }
 }

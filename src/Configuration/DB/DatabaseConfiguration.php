@@ -2,6 +2,6 @@
 
 namespace Funnelnek\Configuration\DB;
 
-class StoreDatabaseConfiguration
+class DatabaseConfiguration
 {
 }
