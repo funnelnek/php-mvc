@@ -12,7 +12,7 @@ use Funnelnek\App\Repository\CategoryRepository;
 use Funnelnek\App\Repository\ProductRepository;
 use Funnelnek\App\Service\CatalogService;
 use Funnelnek\App\Service\ProductService;
-use Funnelnek\Configuration\DB\StoreDatabaseConfiguration;
+use Funnelnek\Configuration\DB\DatabaseConfiguration;
 use Funnelnek\Core\Data\DBContext;
 use Funnelnek\Core\Data\Attribute\DBSet;
 use Funnelnek\Core\Data\DatabaseContext;
@@ -21,7 +21,7 @@ use PDO;
 
 #[DBContext(
     driver: PDO::class,
-    configuration: StoreDatabaseConfiguration::class,
+    configuration: DatabaseConfiguration::class,
 )]
 class StoreDB extends DatabaseContext
 {

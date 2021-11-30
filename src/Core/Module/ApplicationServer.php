@@ -2,6 +2,9 @@
 
 namespace Funnelnek\Core\Module;
 
+use Funnelnek\Core\HTTP\Request;
+use Funnelnek\Core\HTTP\Response;
+
 class ApplicationServer
 {
     public function __construct(private Application $app)
@@ -29,6 +32,9 @@ class ApplicationServer
         $this->httpHost = $_SERVER['HTTP_HOST'];
         $this->redirectStatus = $_SERVER['REDIRECT_STATUS'];
         $this->httpLang = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+
+
+        $app->server = $this;
     }
 
     public string $ip;
@@ -55,4 +61,14 @@ class ApplicationServer
     public string $httpHost;
     public string $redirectStatus;
     public string $httpLang;
+
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    public function getResponse()
+    {
+        return $this->response;
+    }
 }

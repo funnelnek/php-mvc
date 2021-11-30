@@ -15,7 +15,7 @@ interface IRouter
      * @param Route $route The route instance.
      * @return void
      */
-    public function addRoute(Route $route): void;
+    public static function addRoute(Route $route): void;
 
     /**
      * Method resolve
@@ -25,7 +25,7 @@ interface IRouter
      *
      * @return void
      */
-    public function resolve(Request $req, Response $res): string;
+    public static function resolve(): string;
 
     /**
      * Dispatch route and create controller instance
@@ -34,7 +34,7 @@ interface IRouter
      * @param string $url The incoming requested URL.
      * @return void
      */
-    public function dispatch(string $url): void;
+    public static function dispatch(string $url): void;
 
     /**
      * Method match
@@ -43,5 +43,5 @@ interface IRouter
      *
      * @return bool
      */
-    public function match(string $url): bool;
+    public static function match(string $url): bool;
 }

@@ -8,6 +8,4 @@ interface IDatabaseConnection
 {
     public function open();
     public function close(): void;
-    public function query();
-    public function write();
 }

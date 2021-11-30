@@ -15,8 +15,4 @@ class DatabaseConnection implements IDatabaseConnection
     public function close(): void
     {
     }
-
-    public function query()
-    {
-    }
 }

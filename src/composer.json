@@ -13,16 +13,17 @@
     }],
     "autoload": {
         "psr-4": {
-            "Funnelnek\\": "."
+            "Funnelnek\\": ".",
+            "Dotenv\\": "./vendor/vlucas/phpdotenv/src"
         }
     },    
     "autoload-dev": {
         "psr-4": {
-            "Funnelnek\\Test": "./Test"
+            "Funnelnek\\Test\\": "./Test"
         }
     },
     "require": {
-        "vlucas/phpdotenv": "^5.0",
+        "vlucas/phpdotenv": "^5.4",
         "phpunit/phpunit":"^9",
         "webonyx/graphql-php": "*",
         "ext-mbstring": "*",

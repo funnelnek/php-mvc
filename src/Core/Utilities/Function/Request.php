@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Funnelnek\Core\Utilities\Function;
 
 function get_request_body()

@@ -5,29 +5,34 @@ declare(strict_types=1);
 namespace Funnelnek\Core\Router;
 
 use Closure;
-
-use Funnelnek\Core\Interfaces\IMiddleware;
-use Funnelnek\Core\Interfaces\IRoute;
-use Funnelnek\Core\Router;
-
-use function Funnelnek\Core\Utilities\Function\convert_route_pattern;
-use function Funnelnek\Core\Utilities\Function\get_params;
-use function Funnelnek\Core\Utilities\Function\has_params;
-
+use Funnelnek\Core\Router\Exceptions\Constants\RouteError;
+use Funnelnek\Core\Router\Exceptions\RouteControllerException;
+use Funnelnek\Core\Router\Exceptions\RouteParamException;
+use Funnelnek\Core\Router\Interfaces\IRoute;
+use ReflectionFunction;
 
 class Route implements IRoute
 {
-    protected RouteParam $params;
-    protected string $prefix;
+    //Constant Routing Configuration
+    public const PATH_PARAM_VAR_PATTERN = '/\{\s*(?<name>[[:alpha:]][[:alnum:]]+?)(?:\:(?<match>[^\}]+))?\s*\}/i';
+    public const PARAMS_REPLACEMENT_PATTERN = '(?<$1>$2)';
+    public const PATH_WILDCARD_PATTERN = '/\*/';
+    public const PATH_WILDCARD_REPLACEMENT = '[^\\/]';
+    public const DEFAULT_PATH_CAPTURE_PATTERN = '[\w-]+';
+    public const DEFAULT_API_PATH_CAPTURE_PATTERN = '/^(?<controller>' . Route::DEFAULT_PATH_CAPTURE_PATTERN . ')\/(?<action>' . Route::DEFAULT_PATH_CAPTURE_PATTERN . ')$/i';
+
+
+    protected array $params;
     protected string $route;
     protected array $middlewares = [];
+    protected ?string $routeName = null;
 
 
     /**
      * Route Constructor
-     * @param string $method []
-     * @param string $path []
-     * @param string|array|Closure $controller []
+     * @param string $method [The HTTP method]
+     * @param string $path [The url route path]
+     * @param string|array|Closure $controller [The request handler]
      * @return Route
      */
     public function __construct(
@@ -35,10 +40,11 @@ class Route implements IRoute
         protected string $path,
         protected string|array|Closure $controller
     ) {
-        if (has_params($path)) {
-            $this->params = get_params($path);
+        if (static::containsParams($path)) {
+            $this->params = static::captureParams($path);
         }
-        $this->route = convert_route_pattern($path);
+        $this->route = static::convertRoutePattern($path);
+        Router::addRoute($this);
     }
 
     /**
@@ -53,6 +59,9 @@ class Route implements IRoute
         string $path,
         string|array|Closure $controller,
     ): Route {
+        if (!static::isValidController($controller)) {
+            throw new RouteControllerException(RouteError::INVALID_ROUTE_CONTROLLER_TYPE);
+        }
         return new Route(method: 'GET', path: $path, controller: $controller);
     }
 
@@ -98,20 +107,149 @@ class Route implements IRoute
         return new Route(method: 'DELETE', path: $path, controller: $controller);
     }
 
-    public function applyMiddleware(...$middlewares)
+    protected static function isValidController($controller): bool
     {
-        $this->compose_middleware($middlewares);
+        return (is_callable($controller) || is_array($controller) || is_string($controller));
     }
+
+    /**
+     * Method convert_route_pattern
+     *
+     * @param string $route [explicite description]
+     *
+     * @return string
+     */
+    public static function convertRoutePattern(string $route): string
+    {
+
+        $route = static::escapePathSegments($route);
+
+        if (static::containsParams($route)) {
+            $route = static::convertParams($route);
+        }
+
+        // $route = convert_wildcard_params($route);
+
+        // Add regular expression delimiter.
+        $route = '/^' . $route . '/i';
+        return $route;
+    }
+
+    protected static function escapePathSegments(string $route): string
+    {
+        return preg_replace('/\//', '\\/', $route);
+    }
+
+    /**
+     * Method has_params
+     *
+     * @param string $route
+     *
+     * @return void
+     */
+    protected static function containsParams($route): bool | int
+    {
+        return preg_match(Route::PATH_PARAM_VAR_PATTERN, $route);
+    }
+
+
+    public static function parameter(string $param, string $pattern)
+    {
+        $parameter = "{{$param}:{$pattern}}";
+        $options = static::captureParams($parameter);
+        $match = static::convertParams($parameter);
+
+        Router::addParameter(new RouteParam($match, $options));
+    }
+
     public function hasParams(): bool
     {
         return isset($this->params);
     }
 
-    public function param(string $param, ?string $pattern)
+    protected static function convertWildcardParams(string $route): string
     {
-        // if (!array_key_exists($param, $this->params->getParams())) {
-        //     $this->params[$param] = $pattern;
-        // }
+        return preg_replace(Route::PATH_WILDCARD_PATTERN, Route::PATH_WILDCARD_REPLACEMENT, $route);
+    }
+
+    /**
+     * Checks if the parameter is valid.
+     *
+     * @param string $param [The variable parameter]
+     *
+     * @return void
+     */
+    protected static function isVaidParamPattern(string $param)
+    {
+        return static::containsParams($param);
+    }
+
+
+    /**
+     * Converts the variable parameter into a regular expression.
+     * 
+     * @param string $route [The path route]
+     * 
+     * @return string
+     */
+    public static function convertParams(string $route): string
+    {
+        return preg_replace(Route::PATH_PARAM_VAR_PATTERN, Route::PARAMS_REPLACEMENT_PATTERN, $route);
+    }
+
+    public function applyMiddleware(...$middlewares)
+    {
+        $this->composeMiddleware($middlewares);
+    }
+
+    public function resolveParam(string $param, Closure $resolver)
+    {
+    }
+
+    public function param(string $param, string $pattern): Route
+    {
+        switch (isset($this->params[$param])) {
+            case false:
+                throw new RouteParamException(RouteError::NO_PARAMETER_FOUND . ": {$param}");
+                break;
+            default:
+                $target = $this->params[$param];
+                $captured = $target->getCaptured();
+
+                $routeParam = static::convertParams($captured);
+                $routeParamReplacement = static::convertParams("{" . $param . ":" . $pattern . "}");
+
+                $target->setPattern($pattern);
+                $this->route = str_replace($routeParam, $routeParamReplacement, $this->route);
+                return $this;
+        }
+    }
+
+
+    public function getName()
+    {
+        return $this->routeName;
+    }
+
+    public function name(string $name)
+    {
+        $this->routeName = $name;
+    }
+
+    /**
+     * 
+     */
+    public function getParam(string $param): array|bool
+    {
+        if (isset($this->params[$param])) {
+            return $this->params[$param];
+        }
+        return false;
+    }
+
+    public function getParams()
+    {
+        return $this->params;
     }
 
     /**
@@ -150,19 +288,65 @@ class Route implements IRoute
 
     public function getRoute(): string
     {
-        return $this->prefix . $this->pattern;
+        return $this->route;
     }
 
-    public function getParams()
+    public function getController(): string|array|Closure
     {
-        return $this->params;
+        return $this->controller;
     }
 
-    public function isMatch(string $url): bool
+    /**
+     * Gets all the variable parameters
+     * and returns an associative array.
+     * 
+     * @param string $route [The url path route]
+     * 
+     * @return array|void
+     */
+    protected static function captureParams(string &$route)
     {
-        return preg_match($this->route, $url, $matches);
+        $params = [];
+        if (preg_match_all(static::PATH_PARAM_VAR_PATTERN, $route, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE)) {
+            $capturedParams = [];
+            $replacements = [];
+
+            foreach ($matches as $index => $match) {
+                if (static::isVaidParamPattern($match[0][0])) {
+
+                    $name = $match["name"][0];
+                    $nameOffset = $match["name"][1];
+                    $nameLength = strlen($name);
+
+                    switch (isset($match["match"])) {
+                        case false:
+                            $capturedParams[$index] = $match[0][0];
+                            $match["match"] = [
+                                static::DEFAULT_PATH_CAPTURE_PATTERN,
+                                ($nameOffset + $nameLength + 2)
+                            ];
+                            $replacements[$index] = "{" . $name . ":" . static::DEFAULT_PATH_CAPTURE_PATTERN . "}";
+                        default:
+                            $params[$name] = new RouteParam($name, [
+                                "pattern" => $match["match"][0],
+                                "offset" => $match["match"][1],
+                                "captured" => isset($replacements[$index]) ? $replacements[$index] : $match[0][0]
+                            ]);
+                    }
+                }
+            }
+            $route = str_replace($capturedParams, $replacements, $route);
+        }
+
+        return $params;
     }
-    protected function compose_middleware(array $middlewares)
+
+    public function isMatch(string $url): bool | int
+    {
+        return preg_match($this->route, $url);
+    }
+
+    protected function composeMiddleware(array $middlewares)
     {
     }
 }

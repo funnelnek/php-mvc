@@ -1,33 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Funnelnek\Core\Injection\Traits;
 
 
 use Funnelnek\Core\Attribute\Service\InjectionStrategy;
 use Funnelnek\Core\Injection\Exception\DependencyNoDefaultValueException;
 use Funnelnek\Core\Injection\Exception\InjectionStrategyNoValueException;
-use Funnelnek\Core\Injection\Exception\NotInstantiableException;
 use Funnelnek\Core\Injection\Injector;
-use ReflectionAttribute;
+
 use ReflectionClass;
-use ReflectionException;
-use ReflectionParameter;
 
 trait DependencyInjection
 {
     protected static array $providers = [];
 
     // Sets new Dependency Injection
-    public static function set($id, $implementation = null, string $strategy = "transient")
+    public static function set(string $id, string $strategy = "singleton")
     {
         // Safe guard check
-        if (self::has($id)) {
+        if (static::has($id)) {
             return;
-        }
-
-        // Default set implementation to namespace class if null.
-        if (is_null($implementation)) {
-            $implementation = $id;
         }
 
         $reflection = new ReflectionClass($id);
@@ -43,33 +37,24 @@ trait DependencyInjection
             $strategy = $injection->strategy;
         }
 
-        switch ($reflection->isInstantiable()) {
-            case true:
-                // no constructor define on the class.
-                if (is_null($constructor)) {
-                    return $reflection->newInstance();
-                }
-
-                break;
-            case false:
-                if ($reflection->hasMethod('getInstance')) {
-                }
-                break;
-            default:
+        if ($reflection->isInstantiable()) {
+            // no constructor define on the class.
+            if (is_null($constructor)) {
+                return $reflection->newInstance();
+            }
         }
 
-
-        static::$providers[$id] = new Injector(id: $id, implementation: $implementation, strategy: $strategy);
+        static::$providers[$id] = new Injector(id: $id, strategy: $strategy);
     }
 
     // Get Injectable Service
     public static function get(string $id)
     {
-        if (!self::has($id)) {
-            self::set($id);
+        if (!static::has($id)) {
+            static::set($id);
         }
-        $injector = self::$providers[$id];
-        return self::resolve($injector);
+        $dependency = static::$providers[$id];
+        return static::resolve($dependency);
     }
 
     // Checks if Service exists
