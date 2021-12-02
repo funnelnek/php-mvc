@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Funnelnek\Core\Router;
 
 use Closure;
+use Funnelnek\Configuration\Constant\Http\HttpMethods;
+use Funnelnek\Configuration\Constant\Http\HttpMethodSupported;
 use Funnelnek\Core\Router\Exceptions\Constants\RouteError;
 use Funnelnek\Core\Router\Exceptions\RouteControllerException;
 use Funnelnek\Core\Router\Exceptions\RouteParamException;
 use Funnelnek\Core\Router\Interfaces\IRoute;
+use ReflectionClass;
 use ReflectionFunction;
 
 class Route implements IRoute
@@ -22,10 +25,15 @@ class Route implements IRoute
     public const DEFAULT_API_PATH_CAPTURE_PATTERN = '/^(?<controller>' . Route::DEFAULT_PATH_CAPTURE_PATTERN . ')\/(?<action>' . Route::DEFAULT_PATH_CAPTURE_PATTERN . ')$/i';
 
 
+    protected static ?string $currentRoutingGroup;
+
+    protected ?int $id;
     protected array $params;
     protected string $route;
     protected array $middlewares = [];
     protected ?string $routeName = null;
+    protected array $methods = [];
+    protected string $origin;
 
 
     /**
@@ -43,7 +51,7 @@ class Route implements IRoute
         if (static::containsParams($path)) {
             $this->params = static::captureParams($path);
         }
-        $this->route = static::convertRoutePattern($path);
+        $this->origin = $this->route = static::convertRoutePattern($path);
         Router::addRoute($this);
     }
 
@@ -59,10 +67,15 @@ class Route implements IRoute
         string $path,
         string|array|Closure $controller,
     ): Route {
+        $path = trim($path);
+        $routingGroup = static::$currentRoutingGroup !== "/www" ? static::$currentRoutingGroup : '';
+
+        str_starts_with($path, '/') ? $path = $routingGroup . $path : $path = $routingGroup . '/' . $path;
+
         if (!static::isValidController($controller)) {
             throw new RouteControllerException(RouteError::INVALID_ROUTE_CONTROLLER_TYPE);
         }
-        return new Route(method: 'GET', path: $path, controller: $controller);
+        return new Route(method: HttpMethods::GET, path: $path, controller: $controller);
     }
 
     /**
@@ -76,7 +89,7 @@ class Route implements IRoute
      */
     public static function post(string $path, string|array|Closure $controller)
     {
-        return new Route(method: 'POST', path: $path, controller: $controller);
+        return new Route(method: HttpMethods::POST, path: $path, controller: $controller);
     }
 
     /**
@@ -90,9 +103,13 @@ class Route implements IRoute
      */
     public static function put(string $path, string|array|Closure $controller)
     {
-        return new Route(method: 'PUT', path: $path, controller: $controller);
+        return new Route(method: HttpMethods::PUT, path: $path, controller: $controller);
     }
 
+    public static function patch(string $path, string|array|Closure $controller)
+    {
+        return new Route(HttpMethods::PATCH, $path, $controller);
+    }
     /**
      * Method delete
      *
@@ -104,13 +121,63 @@ class Route implements IRoute
      */
     public static function delete(string $path, string|array|Closure $controller)
     {
-        return new Route(method: 'DELETE', path: $path, controller: $controller);
+        return new Route(method: HttpMethods::DELETE, path: $path, controller: $controller);
+    }
+
+    public static function option(string $path, string|array|Closure $controller)
+    {
+        return new Route(method: HttpMethods::OPTION, path: $path, controller: $controller);
+    }
+
+    public static function match(array $methods, string $path, string|array|Closure $controller)
+    {
+        $reflect = new ReflectionClass(HttpMethodSupported::class);
+        $supported = array_keys($reflect->getConstants());
+
+        $routes = [];
+        foreach ($methods as $method) {
+            $action = strtolower($method);
+            if (in_array($method, $supported)) {
+                if (method_exists(static::class, $action)) {
+                    $routes[] = static::$action($method, $path, $controller);
+                }
+            }
+        }
+        return $routes;
+    }
+
+    public static function any(string $path, string|array|Closure $controller)
+    {
+        $reflect = new ReflectionClass(HttpMethodSupported::class);
+        $constants = $reflect->getConstants();
+
+        $supported = [];
+        foreach ($constants as $method => $supported) {
+            if ($supported) {
+                $supported[] = $method;
+            }
+        }
+        return static::match($supported, $path, $controller);
+    }
+
+    public static function redirect(string $path, string $destination, int $statusCode = 302)
+    {
+    }
+
+    public static function view(string $path, string $view, array $data)
+    {
+    }
+
+    public static function setCurrentRoutingGroup(string $name)
+    {
+        static::$currentRoutingGroup = '/' . $name;
     }
 
     protected static function isValidController($controller): bool
     {
         return (is_callable($controller) || is_array($controller) || is_string($controller));
     }
+
 
     /**
      * Method convert_route_pattern
@@ -221,6 +288,7 @@ class Route implements IRoute
 
                 $target->setPattern($pattern);
                 $this->route = str_replace($routeParam, $routeParamReplacement, $this->route);
+                Router::addRoute($this);
                 return $this;
         }
     }
@@ -286,6 +354,15 @@ class Route implements IRoute
         return $this->method;
     }
 
+    public function getOrigin()
+    {
+        return $this->origin;
+    }
+
+    public function setOrigin(string $origin)
+    {
+        $this->origin = $origin;
+    }
     public function getRoute(): string
     {
         return $this->route;

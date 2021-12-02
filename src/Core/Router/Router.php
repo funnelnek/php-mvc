@@ -91,13 +91,21 @@ class Router implements IRouter
      */
     public static function addRoute(Route $route): void
     {
-        $name = $route->getName();
+        $name = $route->getName() ?? null;
         $method = $route->getMethod();
+        $targetRoute = $route->getRoute();
+        $origin = $route->getOrigin();
 
-        if (isset($name)) {
+        if ($origin !== $targetRoute) {
+            unset(static::$routes[$method][$origin]);
+            $route->setOrigin($targetRoute);
+        }
+
+        if ($name) {
             static::$namedRoutes[$name] = $route;
         }
-        static::$routes[$method][$route->getRoute()] = $route;
+
+        static::$routes[$method][$targetRoute] = $route;
         return;
     }
 

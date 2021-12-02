@@ -1,10 +1,9 @@
 <?php
 
-namespace Funnelnek\App\Service;
+namespace Funnelnek\App\Services;
 
 use Funnelnek\Core\Service\ServiceProvider;
 
 class CatalogService extends ServiceProvider
 {
 }
-return CatalogService::class;

@@ -2,9 +2,6 @@
 
 namespace Funnelnek\Core\Module;
 
-use Funnelnek\Core\HTTP\Request;
-use Funnelnek\Core\HTTP\Response;
-
 class ApplicationServer
 {
     public function __construct(private Application $app)

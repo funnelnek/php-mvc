@@ -2,10 +2,9 @@
 
 namespace Funnelnek\Core\Module;
 
-use Funnelnek\App\Service\CacheControlService;
+
 use Funnelnek\Configuration\Constant\Settings;
-use Funnelnek\Core\Http\Request;
-use Funnelnek\Core\Http\Response;
+use Funnelnek\Core\Router\Route;
 use Funnelnek\Core\Router\Router;
 
 class ApplicationBuilder
@@ -13,9 +12,6 @@ class ApplicationBuilder
     public function __construct(private Application $app)
     {
         // Setting default dependencies injections.        
-        $app->set(Request::class);
-        $app->set(Response::class);
-        $app->set(ApplicationServer::class);
         $app->set(Configuration::class);
     }
     public function build(): void
@@ -26,26 +22,29 @@ class ApplicationBuilder
 
     protected function loadServices()
     {
-        $servicesProviderFiles = glob(Settings::SERVICE_PATH . "/*.php", GLOB_NOSORT | GLOB_ERR);
-        if ($servicesProviderFiles) {
-            foreach ($servicesProviderFiles as $service) {
-                $provider = require_once $service;
+        $providers = require_once Settings::SERVICE_PATH . "/AppServicesProvider.php";
 
-                if (class_exists($provider)) {
-                    $this->app->set($provider);
-                } else {
-                }
+        if (isset($providers)) {
+            foreach ($providers as $provider) {
+                $this->app->set($provider);
             }
         }
     }
 
     protected function loadRoutes()
     {
+        $routingGroups = [];
         $routesFiles = glob(Settings::ROUTE_PATH . "/*.php", GLOB_NOSORT | GLOB_ERR);
         if ($routesFiles) {
             foreach ($routesFiles as $routes) {
-                echo "$routes <br/>";
-                require_once $routes;
+                if (preg_match("/\/(?<endpoint>[[:alnum:]\-]+?)\.php$/i", $routes, $match)) {
+                    $endpoint = $match["endpoint"];
+                    $router = new Router();
+                    $routingGroups[$endpoint] = $router;
+
+                    Route::setCurrentRoutingGroup($endpoint);
+                    require_once $routes;
+                }
             }
         }
     }

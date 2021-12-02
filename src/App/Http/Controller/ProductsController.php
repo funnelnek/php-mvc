@@ -4,7 +4,7 @@ namespace Funnelnek\App\Http\Controller;
 
 use Funnelnek\App\Model\Product;
 use Funnelnek\App\Repository\ProductRepository;
-use Funnelnek\App\Service\ProductService;
+use Funnelnek\App\Services\ProductService;
 use Funnelnek\Configuration\Constant\Http\HttpResponseCode;
 use Funnelnek\Core\HTTP\Attributes\Controller\APIController;
 use Funnelnek\Core\HTTP\Attributes\Method\HttpGet as Get;
@@ -22,7 +22,6 @@ use Funnelnek\Core\Module\View\RouteView;
 use Funnelnek\Core\Router\Router;
 
 
-#[RouteParam(name: "product", pattern: "\d+")]
 #[APIController(endpoint: 'products')]
 class ProductsController extends Controller
 {

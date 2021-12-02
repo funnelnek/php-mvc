@@ -1,8 +1,7 @@
 <?php
 
-namespace Funnelnek\App\Service;
+namespace Funnelnek\App\Services;
 
 class CacheControlService
 {
 }
-return CacheControlService::class;

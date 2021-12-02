@@ -12,4 +12,3 @@ class ProductService
     ) {
     }
 }
-return ProductService::class;

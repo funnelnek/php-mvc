@@ -51,7 +51,7 @@ class RouteParam
     {
         $match = $this->pattern;
         $this->captured = str_replace($match, $pattern, $this->captured);
-        $this->pattern = $this->options["pattern"] = $pattern;
+        $this->pattern = $pattern;
         $this->match = Route::convertParams($this->captured);
     }
 

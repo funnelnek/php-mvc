@@ -23,7 +23,6 @@ final class Application
         self::$instance = $this;
 
         $app = $this->builder = new ApplicationBuilder($this);
-        $app->build();
     }
 
 
@@ -44,9 +43,9 @@ final class Application
             $app->boot();
         }
 
-        echo "<pre>";
-        var_dump(static::$providers);
-        echo "</pre>";
+        // echo "<pre>";
+        // var_dump(static::$providers);
+        // echo "</pre>";
 
         echo "<pre>";
         var_dump(Router::$routes);
@@ -69,6 +68,7 @@ final class Application
      */
     private function boot()
     {
+        $this->builder->build();
     }
 
     /**
