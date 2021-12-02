@@ -21,7 +21,7 @@ class Route implements IRoute
     public const PARAMS_REPLACEMENT_PATTERN = '(?<$1>$2)';
     public const PATH_WILDCARD_PATTERN = '/\*/';
     public const PATH_WILDCARD_REPLACEMENT = '[^\\/]';
-    public const DEFAULT_PATH_CAPTURE_PATTERN = '[\w-]+';
+    public const DEFAULT_PATH_CAPTURE_PATTERN = '[:[word]:\-]+';
     public const DEFAULT_API_PATH_CAPTURE_PATTERN = '/^(?<controller>' . Route::DEFAULT_PATH_CAPTURE_PATTERN . ')\/(?<action>' . Route::DEFAULT_PATH_CAPTURE_PATTERN . ')$/i';
 
 
@@ -273,26 +273,63 @@ class Route implements IRoute
     {
     }
 
-    public function param(string $param, string $pattern): Route
+    public function where(string|array $param, string $pattern)
     {
         switch (isset($this->params[$param])) {
             case false:
                 throw new RouteParamException(RouteError::NO_PARAMETER_FOUND . ": {$param}");
                 break;
             default:
-                $target = $this->params[$param];
-                $captured = $target->getCaptured();
-
-                $routeParam = static::convertParams($captured);
-                $routeParamReplacement = static::convertParams("{" . $param . ":" . $pattern . "}");
-
-                $target->setPattern($pattern);
-                $this->route = str_replace($routeParam, $routeParamReplacement, $this->route);
-                Router::addRoute($this);
-                return $this;
+                switch (is_array($param)) {
+                    case true:
+                        foreach ($param as $name => $constraint) {
+                            $this->constraint($name, $constraint);
+                        }
+                        return $this;
+                    default:
+                        return $this->constraint($param, $pattern);
+                }
         }
     }
 
+    public function alnum(string $param, int $repeat = null)
+    {
+        $alnum = "[:[alnum]:]";
+        $pattern = isset($repeat) ? $alnum . "{" . $repeat . "}" : $alnum . "+";
+        return $this->where($param, $pattern);
+    }
+
+    public function digit(string $param, int $repeat = null)
+    {
+        $digit = "[:[digit]:]";
+        $pattern = isset($repeat) ? $digit . "{" . $repeat . "}" : $digit . "+";
+        return $this->where($param, $pattern);
+    }
+
+    public function hex(string $param, int $repeat = null)
+    {
+        $hex = "[:[xdigit]:]";
+        $pattern = isset($repeat) ? $hex . "{" . $repeat . "}" : $hex . "+";
+        return $this->where($param, $pattern);
+    }
+
+    public function alpha(string $param, int $repeat = null)
+    {
+        $alpha = "[:[alpha]:]";
+        $pattern = isset($repeat) ? $alpha . "{" . $repeat . "}" : $alpha . "+";
+        return $this->where($param, $pattern);
+    }
+
+    public function ascii(string $param, int $repeat = null)
+    {
+        $ascii = "[:[ascii]:]";
+        $pattern = isset($repeat) ? $ascii . "{" . $repeat . "}" : $ascii . "+";
+        return $this->where($param, $pattern);
+    }
+
+    public function param(string $param, string|array|Closure $resolver)
+    {
+    }
 
     public function getName()
     {
@@ -425,5 +462,19 @@ class Route implements IRoute
 
     protected function composeMiddleware(array $middlewares)
     {
+    }
+
+    protected function constraint(string $param, string $pattern)
+    {
+        $target = $this->params[$param];
+        $captured = $target->getCaptured();
+
+        $routeParam = static::convertParams($captured);
+        $routeParamReplacement = static::convertParams("{" . $param . ":" . $pattern . "}");
+
+        $target->setPattern($pattern);
+        $this->route = str_replace($routeParam, $routeParamReplacement, $this->route);
+        Router::addRoute($this);
+        return $this;
     }
 }

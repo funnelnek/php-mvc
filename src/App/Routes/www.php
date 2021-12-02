@@ -6,4 +6,4 @@ use Funnelnek\App\Controller\ProductsController;
 use Funnelnek\Core\Router\Route;
 
 
-Route::get(path: '/products/{id}', controller: [ProductsController::class, "findById"])->param('id', '\d+');
+Route::get(path: '/products/{id}', controller: [ProductsController::class, "findById"])->where('id', '\d+');
