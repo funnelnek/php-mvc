@@ -5,13 +5,10 @@ namespace Funnelnek\Core\Module;
 use Funnelnek\Core\Exception\Exception;
 use Funnelnek\Configuration\Constant\Settings;
 use Funnelnek\Core\HTTP\Exception\BadRequestException;
-use Funnelnek\Core\Injection\Traits\DependencyInjection;
-use Funnelnek\Core\Router\Router;
+use Funnelnek\Core\Service\Container\ServiceContainer;
 
-final class Application
+final class Application extends ServiceContainer
 {
-    use DependencyInjection;
-
     public const Name = "Funnelnek";
     public const VERSION = "1.0.0";
 
@@ -21,11 +18,8 @@ final class Application
     private function __construct()
     {
         self::$instance = $this;
-
-        $app = $this->builder = new ApplicationBuilder($this);
+        $this->builder = new ApplicationBuilder($this);
     }
-
-
 
     //Run Application
     public static function run()
@@ -47,9 +41,9 @@ final class Application
         // var_dump(static::$providers);
         // echo "</pre>";
 
-        echo "<pre>";
-        var_dump(Router::$routes);
-        echo "</pre>";
+        // echo "<pre>";
+        // var_dump(Router::$routes);
+        // echo "</pre>";
     }
 
     /**

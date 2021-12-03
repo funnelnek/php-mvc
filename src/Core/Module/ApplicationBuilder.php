@@ -4,8 +4,8 @@ namespace Funnelnek\Core\Module;
 
 
 use Funnelnek\Configuration\Constant\Settings;
-use Funnelnek\Core\Router\Route;
-use Funnelnek\Core\Router\Router;
+use Funnelnek\Core\Injection\Attributes\Injectiable;
+use ReflectionClass;
 
 class ApplicationBuilder
 {
@@ -17,35 +17,30 @@ class ApplicationBuilder
     public function build(): void
     {
         $this->loadServices();
-        $this->loadRoutes();
+        //  $this->loadRoutes();
     }
 
     protected function loadServices()
     {
         $providers = require_once Settings::SERVICE_PATH . "/AppServicesProvider.php";
+        $app = $this->app;
 
         if (isset($providers)) {
             foreach ($providers as $provider) {
-                $this->app->set($provider);
+                $service = $app->get($provider);
+
+                if (method_exists($service, "register")) {
+                    $service->register();
+                }
+
+                if (method_exists($service, "boot")) {
+                    $service->boot();
+                }
             }
         }
     }
 
     protected function loadRoutes()
     {
-        $routingGroups = [];
-        $routesFiles = glob(Settings::ROUTE_PATH . "/*.php", GLOB_NOSORT | GLOB_ERR);
-        if ($routesFiles) {
-            foreach ($routesFiles as $routes) {
-                if (preg_match("/\/(?<endpoint>[[:alnum:]\-]+?)\.php$/i", $routes, $match)) {
-                    $endpoint = $match["endpoint"];
-                    $router = new Router();
-                    $routingGroups[$endpoint] = $router;
-
-                    Route::setCurrentRoutingGroup($endpoint);
-                    require_once $routes;
-                }
-            }
-        }
     }
 }

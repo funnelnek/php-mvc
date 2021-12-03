@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace Funnelnek\Core\Router;
 
 use Closure;
-use Funnelnek\Configuration\Constant\Http\HttpMethods;
-use Funnelnek\Configuration\Constant\Http\HttpMethodSupported;
+use Funnelnek\Core\Http\Constants\HttpMethods;
+use Funnelnek\Core\Http\Constants\HttpMethodSupported;
 use Funnelnek\Core\Router\Exceptions\Constants\RouteError;
 use Funnelnek\Core\Router\Exceptions\RouteControllerException;
 use Funnelnek\Core\Router\Exceptions\RouteParamException;
 use Funnelnek\Core\Router\Interfaces\IRoute;
 use ReflectionClass;
 use ReflectionFunction;
+
 
 class Route implements IRoute
 {
@@ -251,6 +252,9 @@ class Route implements IRoute
         return static::containsParams($param);
     }
 
+    public static function pattern(string $param, string $pattern)
+    {
+    }
 
     /**
      * Converts the variable parameter into a regular expression.
@@ -267,10 +271,6 @@ class Route implements IRoute
     public function applyMiddleware(...$middlewares)
     {
         $this->composeMiddleware($middlewares);
-    }
-
-    public function resolveParam(string $param, Closure $resolver)
-    {
     }
 
     public function where(string|array $param, string $pattern)
@@ -339,6 +339,7 @@ class Route implements IRoute
     public function name(string $name)
     {
         $this->routeName = $name;
+        Router::addRoute($this);
     }
 
     /**

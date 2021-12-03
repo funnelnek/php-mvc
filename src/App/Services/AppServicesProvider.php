@@ -1,11 +1,13 @@
 <?php
 
-use Funnelnek\App\Services\CacheControlService;
-use Funnelnek\App\Services\CatalogService;
-use Funnelnek\App\Services\ProductService;
+use Funnelnek\App\Services\CacheControlServiceProvider;
+use Funnelnek\App\Services\CatalogServiceProvider;
+use Funnelnek\App\Services\ProductServiceProvider;
+use Funnelnek\App\Services\RouteServiceProvider;
 
 return [
-    CacheControlService::class,
-    CatalogService::class,
-    ProductService::class
+    RouteServiceProvider::class,
+    CacheControlServiceProvider::class,
+    CatalogServiceProvider::class,
+    ProductServiceProvider::class
 ];

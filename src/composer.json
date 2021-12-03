@@ -15,7 +15,10 @@
         "psr-4": {
             "Funnelnek\\": ".",
             "Dotenv\\": "./vendor/vlucas/phpdotenv/src"
-        }
+        },
+        "psr-0": {
+            "Funnelnek\\Core\\Utilities\\Function": "./Core/Utilities/Function/"
+        }        
     },    
     "autoload-dev": {
         "psr-4": {
