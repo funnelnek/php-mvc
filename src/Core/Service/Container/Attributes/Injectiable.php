@@ -12,12 +12,19 @@ class Injectiable
     const TRANSIENT = 3;
     const INSTANCE = 4;
 
-    public function __construct(protected int $strategy = Injectiable::SCOPED)
-    {
+    public function __construct(
+        protected int $strategy = Injectiable::SCOPED,
+        protected string|array $dependencies = []
+    ) {
     }
 
     public function type()
     {
         return $this->strategy;
+    }
+
+    public function getDependencies()
+    {
+        return $this->dependencies;
     }
 }

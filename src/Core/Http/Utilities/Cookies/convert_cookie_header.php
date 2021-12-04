@@ -1,30 +1,8 @@
 <?php
 
-namespace Funnelnek\Core\Utilities\Function;
+namespace Funnelnek\Core\Http\Utilities\Cookies;
 
 use Funnelnek\Core\HTTP\Cookie;
-
-/**
- * Method parse_request_cookies
- *
- * @return array
- */
-function get_request_cookies()
-{
-    $header = apache_request_headers()['Cookie'];
-    return convert_cookie_header($header);
-}
-
-/**
- * Method parse_response_cookies
- *
- * @return array
- */
-function get_response_cookies()
-{
-    $header = apache_response_headers()['Set-Cookie'];
-    return convert_cookie_header($header);
-}
 
 /**
  * Method convert_cookie_header

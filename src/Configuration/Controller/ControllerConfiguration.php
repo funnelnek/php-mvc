@@ -1,6 +1,6 @@
 <?php
 
-namespace Funnelnek\Configuration;
+namespace Funnelnek\Configuration\Controller;
 
 class ControllerConfiguration
 {

@@ -4,7 +4,6 @@ namespace Funnelnek\App\Services;
 
 use Funnelnek\Configuration\Constant\Settings;
 use Funnelnek\Core\Injection\Attributes\Injectiable;
-use Funnelnek\Core\Module\Application;
 use Funnelnek\Core\Router\Route;
 use Funnelnek\Core\Router\Router;
 use Funnelnek\Core\Service\Container\Attributes\ServiceProviders;
@@ -12,11 +11,13 @@ use Funnelnek\Core\Service\ServiceProvider;
 
 
 #[Injectiable]
-#[ServiceProviders()]
+#[ServiceProviders(
+    [AppServerProvider::class]
+)]
 class RouteServiceProvider extends ServiceProvider
 {
     public function __construct(
-        private Application $app
+        private ServerProvider $server
     ) {
     }
 
@@ -27,7 +28,7 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         $routingGroups = [];
-        $routesFiles = glob(Settings::ROUTE_PATH . "/*.php", GLOB_NOSORT | GLOB_ERR);
+        $routesFiles = glob(Settings::ROUTE_DIR . "/*.php", GLOB_NOSORT | GLOB_ERR);
         if ($routesFiles) {
             foreach ($routesFiles as $routes) {
                 if (preg_match("/\/(?<endpoint>[[:alnum:]\-]+?)\.php$/i", $routes, $match)) {

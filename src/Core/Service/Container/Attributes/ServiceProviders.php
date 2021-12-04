@@ -7,7 +7,12 @@ use Attribute;
 #[Attribute(Attribute::TARGET_CLASS)]
 class ServiceProviders
 {
-    public function __construct(string|array $dependencies = [])
+    public function __construct(protected string|array $provides = [])
     {
+    }
+
+    public function getProviders()
+    {
+        return $this->provides;
     }
 }

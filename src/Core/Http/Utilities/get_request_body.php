@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Funnelnek\Core\Utilities\Function;
+namespace Funnelnek\Core\Http\Utilities;
 
 function get_request_body()
 {

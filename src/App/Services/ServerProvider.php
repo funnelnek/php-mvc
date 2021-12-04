@@ -4,7 +4,9 @@ namespace Funnelnek\App\Services;
 
 use Funnelnek\Core\Service\ServiceProvider;
 
-class AppServerProvider extends ServiceProvider
+
+
+class ServerProvider extends ServiceProvider
 {
     public function register()
     {

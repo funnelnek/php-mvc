@@ -31,27 +31,36 @@ abstract class ServiceContainer implements IContainer
 
     public function singleton(string $provider, Closure $resolver)
     {
+        $this->set($provider, $resolver);
     }
 
     public function scoped(string $provider, Closure $resolver)
     {
+        $this->set($provider, $resolver);
     }
 
     public function transient(string $provider, Closure $resolver)
     {
+        $this->set($provider, $resolver);
     }
 
     public function instance(string $provider, Closure $resolver)
     {
+        $this->set($provider, $resolver);
     }
 
     // Sets new Dependency Injection
     protected function set($id, $implementation = null)
     {
         if (is_null($implementation)) {
-            $concrete = $id;
+            $implementation = $id;
         }
-        static::$providers[$id] = $concrete;
+
+        if (is_callable($id)) {
+        }
+
+        if (class_exists($id)) {
+        }
     }
 
     // Resolve Class Dependencies

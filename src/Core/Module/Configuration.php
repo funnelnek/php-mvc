@@ -4,6 +4,13 @@ namespace Funnelnek\Core\Module;
 
 use Funnelnek\Configuration\Constant\Settings;
 use Funnelnek\Configuration\Exception\InstallationException;
+use Funnelnek\Configuration\Provider\ProviderConfiguration;
+use Funnelnek\Core\Exception\Exception;
+use Funnelnek\Core\Injection\Attributes\Injectiable;
+use Funnelnek\Core\Service\Container\Attributes\ServiceProviders;
+use Funnelnek\Core\Service\Interfaces\IDeferrableProvider;
+use ReflectionClass;
+use ReflectionMethod;
 
 class Configuration
 {
@@ -28,7 +35,8 @@ class Configuration
             default:
                 $this->load();
         }
-        $app->configuration = $this;
+
+        $app->config = $this;
     }
 
     /**
@@ -38,7 +46,7 @@ class Configuration
      */
     public function isInstalled(): bool
     {
-        return file_exists(Settings::CONFIG_PATH . 'uninstall.json');
+        return file_exists(Settings::CONFIG_DIR . 'uninstall.json');
     }
 
     /**
@@ -49,9 +57,65 @@ class Configuration
      */
     private function load(): Configuration
     {
+        $this->loadServices();
         return $this;
     }
 
+
+    protected function loadServices()
+    {
+        $app = $this->app;
+        $config = new ProviderConfiguration();
+        $services = $config->providers;
+
+        foreach ($services as $service) {
+            $meta = new ReflectionClass($service);
+            $injectiable = $meta->getAttributes(Injectiable::class);
+            $provides = $meta->getAttributes(ServiceProviders::class);
+
+
+            if (count($provides)) {
+                $provides = $provides[0]->newInstance();
+                $provides = $provides->getProviders();
+            }
+
+            if (count($injectiable)) {
+                $injection = $injectiable[0]->newInstance();
+                $strategy = $injection->type();
+                $dependencies = $injection->getDependencies();
+            }
+
+            $provider = $this->app->get($service);
+
+            if (method_exists($provider, "provides")) {
+                $provides = array_merge($provides, $provider->provides());
+            }
+
+            if (method_exists($provider, "register")) {
+                $provider->register();
+            }
+
+            if (method_exists($provider, "boot")) {
+                $reflectMethod = new ReflectionMethod($provider, "boot");
+                $params = $reflectMethod->getParameters();
+
+                if (count($params)) {
+                    foreach ($params as $param) {
+                        $target = $param->getType();
+
+                        if ($target->isBuiltin()) {
+                            throw new Exception("");
+                        }
+
+                        $dependency = $target->getName();
+                        $dependencies[] = $app->get($dependency);
+                    }
+                }
+
+                $provider->boot(...$dependencies);
+            }
+        }
+    }
     /**
      * Install the initial application.
      * @return bool

@@ -5,9 +5,10 @@ namespace Funnelnek\Core\Http;
 use Exception;
 use Funnelnek\Configuration\Constant\Settings;
 use Funnelnek\Core\Attribute\Service\InjectionStrategy;
+use Funnelnek\Core\Http\Interfaces\IRequest;
 use Funnelnek\Core\Module\Application;
 
-class Request
+class Request implements IRequest
 {
     public function __construct(Application $app)
     {

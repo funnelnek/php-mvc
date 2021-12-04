@@ -2,6 +2,7 @@
 
 namespace Funnelnek\Core\Module;
 
+use Funnelnek\App\Services\RouteServiceProvider;
 use Funnelnek\Core\Exception\Exception;
 use Funnelnek\Configuration\Constant\Settings;
 use Funnelnek\Core\HTTP\Exception\BadRequestException;
@@ -14,10 +15,13 @@ final class Application extends ServiceContainer
 
     private static Application $instance;
     private ApplicationBuilder $builder;
+    private Configuration $config;
 
     private function __construct()
     {
         self::$instance = $this;
+
+        $this->config = new Configuration($this);
         $this->builder = new ApplicationBuilder($this);
     }
 
@@ -26,24 +30,13 @@ final class Application extends ServiceContainer
     {
         $rootPath = Settings::PUBLIC_PATH;
 
-        // Check to assure the processing script is the app's main script.
+        // Check to assure the processing script is the app's main entry script (e.g. index.php).
         if (!preg_match("#^${rootPath}\/index.php#", $_SERVER['SCRIPT_FILENAME'])) {
             throw new BadRequestException();
         }
 
-        //Check if the app is already instantiated.
-        if (!isset(self::$instance)) {
-            $app = new Application();
-            $app->boot();
-        }
-
-        // echo "<pre>";
-        // var_dump(static::$providers);
-        // echo "</pre>";
-
-        // echo "<pre>";
-        // var_dump(Router::$routes);
-        // echo "</pre>";
+        $app = self::getInstance();
+        $app->handleRequest();
     }
 
     /**
@@ -51,10 +44,16 @@ final class Application extends ServiceContainer
      *
      * @return void
      */
-    public static function getInstance()
+    public static function getInstance(): Application
     {
+        //Check if the app is already instantiated.
+        if (!isset(self::$instance)) {
+            $app = new Application();
+            $app->boot();
+        }
         return self::$instance;
     }
+
     /**
      * Method boot
      *
@@ -78,5 +77,11 @@ final class Application extends ServiceContainer
     public function __wakeup()
     {
         throw new Exception("Cannot unserialize singleton");
+    }
+
+    private function handleRequest()
+    {
+        $router = $this->get(RouteServiceProvider::class);
+        $router->dispatch();
     }
 }

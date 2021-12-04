@@ -2,10 +2,18 @@
 
 namespace Funnelnek\Core\Service;
 
-use Funnelnek\Core\Service\Interfaces\IServiceProvider;
+use Funnelnek\Core\Module\Application;
 
-abstract class ServiceProvider implements IServiceProvider
+
+abstract class ServiceProvider
 {
-    abstract public function register();
-    abstract public function boot();
+    protected Application $app;
+
+    public array $bindings = [];
+    public array $singletons = [];
+
+    public function __construct()
+    {
+        $this->app = Application::getInstance();
+    }
 }

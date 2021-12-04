@@ -1,7 +1,6 @@
 <?php
 
-namespace Funnelnek\Core\Utilities\Function;
-
+namespace Funnelnek\Core\Http\Utilities;
 
 function get_request_cache_control(): array
 {
