@@ -3,3 +3,4 @@
 vendor
 Migration
 **/node_modules
+Cache/**
