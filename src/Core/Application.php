@@ -88,7 +88,6 @@ final class Application extends ServiceContainer implements IApplication
 
     private function serve()
     {
-        echo "<br/> Hello Application Server! <br/>";
         // $router = $this->get(RouteServiceProvider::class);
         // $router->dispatch();
     }

@@ -8,5 +8,3 @@ $dotenv->safeLoad();
 
 // Run Application
 Application::run();
-
-echo phpinfo();

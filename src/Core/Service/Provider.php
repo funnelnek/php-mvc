@@ -31,11 +31,7 @@ class Provider implements IProvider
         private ServiceStrategy $strategy = ServiceStrategy::SINGLETON
     ) {
         $app = $this->app = Application::getInstance();
-        $isInstance = $app->isInstance($implementation, $id);
         $isSingleton = true;
-
-        $this->isInstance = $isInstance;
-
 
         if (class_exists($id)) {
             $meta = $this->meta = new ReflectionClass($id);
@@ -99,7 +95,7 @@ class Provider implements IProvider
         $id = $this->id;
         $app = $this->app;
 
-        if ($app->isInstance($implementation, $id)) {
+        if ($implementation instanceof $id) {
             return $implementation;
         }
 
