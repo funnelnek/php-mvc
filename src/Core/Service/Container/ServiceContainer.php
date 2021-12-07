@@ -3,27 +3,33 @@
 namespace Funnelnek\Core\Service\Container;
 
 use Closure;
-use Funnelnek\Core\Service\Container\Exception\DependencyNoDefaultValueException;
-use Funnelnek\Core\Service\Container\Exception\NotInstantiableException;
-use Funnelnek\Core\Service\Container\Interfaces\IContainer;
+use Funnelnek\Core\Exception\Container\InvalidProviderImplementationException;
+use Funnelnek\Core\Interfaces\Container\IContainer;
+use Funnelnek\Core\Service\Container\Attributes\Instance;
+use Funnelnek\Core\Service\Provider;
+use Funnelnek\Core\Service\ServiceStrategy;
 use ReflectionClass;
 
 abstract class ServiceContainer implements IContainer
 {
     protected static array $providers = [];
 
-
-    // Get Injectable Service
+    /**
+     * @inheritDoc
+     */
     public function get(string $id)
     {
         if (!$this->has($id)) {
             $this->set($id);
         }
+
         $concrete = self::$providers[$id];
-        return $this->resolve($concrete);
+        return $concrete->resolve();
     }
 
-    // Checks if Service exists
+    /**
+     * @inheritDoc
+     */
     public function has(string $id): bool
     {
         return isset(static::$providers[$id]);
@@ -31,76 +37,85 @@ abstract class ServiceContainer implements IContainer
 
     public function singleton(string $provider, Closure $resolver)
     {
-        $this->set($provider, $resolver);
+        $this->set($provider, $resolver, ServiceStrategy::SINGLETON);
     }
 
     public function scoped(string $provider, Closure $resolver)
     {
-        $this->set($provider, $resolver);
+        $this->set($provider, $resolver, ServiceStrategy::SCOPED);
     }
 
     public function transient(string $provider, Closure $resolver)
     {
-        $this->set($provider, $resolver);
+        $this->set($provider, $resolver, ServiceStrategy::TRANSIENT);
     }
 
-    public function instance(string $provider, Closure $resolver)
+    public function instance(string $provider, object $instance)
     {
-        $this->set($provider, $resolver);
+        $this->set($provider, $instance, ServiceStrategy::INSTANCE);
     }
 
-    // Sets new Dependency Injection
-    protected function set($id, $implementation = null)
+    public function bind(string $provider, string|Closure $implementation)
     {
+
+        if (is_callable($implementation) && interface_exists($provider)) {
+            throw new InvalidProviderImplementationException();
+        }
+
+        // Interface binding
+        if (class_exists($implementation) && interface_exists($provider)) {
+            $meta = new ReflectionClass($implementation);
+        }
+
+        if (is_callable($implementation)) {
+        }
+    }
+
+    public function when(string $id)
+    {
+        if ($this->has($id)) {
+        }
+    }
+
+    // Sets Dependency Injection
+    protected function set(string $id, string|array|object $implementation = null, ServiceStrategy $strategy = ServiceStrategy::SINGLETON)
+    {
+        // Safe guard
+        if ($this->has($id)) {
+            return;
+        }
+
         if (is_null($implementation)) {
             $implementation = $id;
         }
 
-        if (is_callable($id)) {
+        // Checks implementation is valid.
+        if (interface_exists($id) && !class_exists($implementation)) {
+            throw new InvalidProviderImplementationException();
         }
 
-        if (class_exists($id)) {
-        }
+        static::$providers[$id] = new Provider($id, $implementation, $strategy);
     }
 
     // Resolve Class Dependencies
-    protected function resolve($concrete)
+    public function resolve(Provider $concrete)
     {
-        $reflection = new ReflectionClass($concrete);
-
-        if (!$reflection->isInstantiable()) {
-            throw new NotInstantiableException("Class {$concrete} is not instantiable.");
-        }
-
-        $constructor = $reflection->getConstructor();
-
-        if (is_null($constructor)) {
-            return $reflection->newInstance();
-        }
-
-        $params =  $constructor->getParameters();
-        $deps = $this->getDependencies($params, $reflection);
-
-        return $reflection->newInstanceArgs($deps);
     }
 
-    // Get all dependencies
-    protected function getDependencies($params, $reflection)
-    {
-        $deps = [];
-        foreach ($params as $param) {
-            $dependency = $param->getClass();
 
-            if (is_null($dependency)) {
-                if ($param->isDefaultValueAvailable()) {
-                    $deps[] = $param->getDefaultValue();
-                } else {
-                    throw new DependencyNoDefaultValueException("Unable to resolve class dependency " . $param->name);
-                }
-            } else {
-                $deps[] = $this->get($dependency->name);
-            }
-        }
-        return $deps;
+    /**
+     * isInstance - Checks if the object is of this class or has this class as one of its parents
+     *
+     * @param object $instance [The object to check]
+     * @param string $parent [The class namespace reference]
+     *
+     * @return bool
+     */
+    public function isInstance(object $instance, string $parent)
+    {
+        $reflect = new ReflectionClass($parent);
+        $attribute = $reflect->getAttributes(Instance::class);
+
+        return count($attribute) && is_a($instance, $parent);
     }
 }

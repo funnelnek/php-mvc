@@ -3,27 +3,24 @@
 namespace Funnelnek\App\Services;
 
 use Funnelnek\Configuration\Constant\Settings;
-use Funnelnek\Core\Injection\Attributes\Injectiable;
+use Funnelnek\Configuration\Routing\RoutingConfiguration;
+
 use Funnelnek\Core\Router\Route;
 use Funnelnek\Core\Router\Router;
 use Funnelnek\Core\Service\Container\Attributes\ServiceProviders;
 use Funnelnek\Core\Service\ServiceProvider;
 
 
-#[Injectiable]
-#[ServiceProviders(
-    [AppServerProvider::class]
-)]
 class RouteServiceProvider extends ServiceProvider
 {
     public function __construct(
+        private RoutingConfiguration $config,
         private ServerProvider $server
     ) {
     }
 
-    public function register()
-    {
-    }
+    #[ServiceProviders]
+    private array $provides = [];
 
     public function boot()
     {

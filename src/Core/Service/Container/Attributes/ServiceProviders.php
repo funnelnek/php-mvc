@@ -3,16 +3,15 @@
 namespace Funnelnek\Core\Service\Container\Attributes;
 
 use Attribute;
+use Funnelnek\Core\Service\ServiceProvider;
 
-#[Attribute(Attribute::TARGET_CLASS)]
+#[Attribute(Attribute::TARGET_PROPERTY)]
 class ServiceProviders
 {
-    public function __construct(protected string|array $provides = [])
-    {
-    }
+    public readonly array $services;
 
-    public function getProviders()
+    public function __construct(ServiceProvider ...$services)
     {
-        return $this->provides;
+        $this->services = $services;
     }
 }

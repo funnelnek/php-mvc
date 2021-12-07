@@ -2,6 +2,9 @@
 
 namespace Funnelnek\Configuration\Database;
 
-class DatabaseConfiguration
+use Funnelnek\Core\Module\Configuration;
+
+
+class DatabaseConfiguration extends Configuration
 {
 }

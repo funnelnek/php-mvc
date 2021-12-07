@@ -6,21 +6,27 @@ namespace Funnelnek\Configuration\Constant;
 class Settings
 {
     //Project Namespace Configuration
-    public const NAMESPACE = 'Funnelnek\\';
-    public const APP_NAMESPACE = Settings::NAMESPACE . 'App\\';
-    public const CONTROLLER_NAMESPACE = Settings::APP_NAMESPACE . 'Controller\\';
-    public const SERVICE_NAMESPACE = Settings::APP_NAMESPACE . 'Service\\';
+    final public const NAMESPACE = 'Funnelnek\\';
+    final public const APP_NAMESPACE = Settings::NAMESPACE . 'App\\';
+    final public const CONTROLLER_NAMESPACE = Settings::APP_NAMESPACE . 'Controller\\';
+    final public const SERVICE_NAMESPACE = Settings::APP_NAMESPACE . 'Service\\';
+    final public const CONFIGURATION_NAMESPACE = Settings::APP_NAMESPACE . 'Configuration\\';
 
     // Project Directories Configuration
-    public const ROOT_DIR = '/var/www/html';
-    public const PUBLIC_DIR = Settings::ROOT_DIR . "/Public";
-    public const TEMPLATE_DIR = Settings::ROOT_DIR . '/App/View';
-    public const CONTROLLER_DIR = Settings::ROOT_DIR . '/App/Controller';
-    public const MIDDLEWARE_DIR = Settings::ROOT_DIR . '/App/Middleware';
-    public const ROUTE_DIR = Settings::ROOT_DIR . '/App/Routes';
-    public const CONFIG_DIR = Settings::ROOT_DIR . '/Configuration';
+    final public const ROOT_DIR = '/var/www/html';
+    final public const APP_DIR = Settings::ROOT_DIR . '/App';
+    final public const PUBLIC_DIR = Settings::ROOT_DIR . "/Public";
+    final public const TEMPLATE_DIR = Settings::APP_DIR . '/View';
+    final public const CONTROLLER_DIR = Settings::APP_DIR . '/Controller';
+    final public const MIDDLEWARE_DIR = Settings::APP_DIR . '/Middleware';
+    final public const ROUTE_DIR = Settings::APP_DIR . '/Routes';
+    final public const CONFIG_DIR = Settings::ROOT_DIR . '/Configuration';
+    final public const TEMP_FILE_UPLOAD_DIR = Settings::ROOT_DIR . '/Cache/File/Repository/Temp';
+    final public const FILE_STORAGE_DIR = Settings::ROOT_DIR . '/Cache/File/Repository/Storage';
 
-    // File Uploads Directories
-    public const TEMP_FILE_UPLOAD = Settings::ROOT_DIR . '/Cache/File/Repository/Temp';
-    public const FILE_STORAGE = Settings::ROOT_DIR . '/Cache/File/Repository/Storage';
+    // Project Start-up Files
+    final public const APP_INDEX_FILE = Settings::PUBLIC_DIR . "/index.php";
+    final public const CONFIGURATION_FILE = Settings::CONFIG_DIR . "/config.php";
+    final public const WEB_ROUTES_FILE = Settings::ROOT_DIR . "/www.php";
+    final public const API_ROUTES_FILE = Settings::ROOT_DIR . "/api.php";
 }
