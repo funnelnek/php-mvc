@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Funnelnek\Core\Data\Interfaces;
 
-use Funnelnek\Core\Data\ORM\IDataMapper;
 
 interface IDatabaseConnection
 {

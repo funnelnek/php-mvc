@@ -1,6 +1,0 @@
-.env
-.idea
-vendor
-Migration
-**/node_modules
-Cache

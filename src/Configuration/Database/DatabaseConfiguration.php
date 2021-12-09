@@ -1,6 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Funnelnek\Configuration\Database;
+
 
 use Funnelnek\Core\Application;
 use Funnelnek\Core\Configuration;
