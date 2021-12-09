@@ -36,30 +36,30 @@ class ApplicationServer
         $app->server = $this;
     }
 
-    public string $ip;
-    public string $hostname;
-    public string $phpVersion;
-    public string $user;
-    public string $serverName;
-    public string $serverPort;
-    public string $serverSoftware;
-    public string $protocol;
-    public string $publicDir;
-    public string $path;
-    public string $remoteAddr;
-    public string $remotePort;
-    public string $url;
-    public string $scriptName;
-    public string $method;
-    public string $query;
-    public string $filename;
-    public string $fcgiRole;
-    public string $httpConnection;
-    public string $accepts;
-    public string $userAgent;
-    public string $httpHost;
-    public string $redirectStatus;
-    public string $httpLang;
+    public readonly string $ip;
+    public readonly string $hostname;
+    public readonly string $phpVersion;
+    public readonly string $user;
+    public readonly string $serverName;
+    public readonly string $serverPort;
+    public readonly string $serverSoftware;
+    public readonly string $protocol;
+    public readonly string $publicDir;
+    public readonly string $path;
+    public readonly string $remoteAddr;
+    public readonly string $remotePort;
+    public readonly string $url;
+    public readonly string $scriptName;
+    public readonly string $method;
+    public readonly string $query;
+    public readonly string $filename;
+    public readonly string $fcgiRole;
+    public readonly string $httpConnection;
+    public readonly string $accepts;
+    public readonly string $userAgent;
+    public readonly string $httpHost;
+    public readonly string $redirectStatus;
+    public readonly string $httpLang;
 
     public function getRequest()
     {

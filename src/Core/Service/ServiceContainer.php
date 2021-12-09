@@ -1,39 +1,17 @@
 <?php
 
-namespace Funnelnek\Core\Service\Container;
+declare(strict_types=1);
+
+namespace Funnelnek\Core\Service;
 
 use Closure;
-use Funnelnek\Core\Exception\Container\InvalidProviderImplementationException;
-use Funnelnek\Core\Interfaces\Container\IContainer;
-use Funnelnek\Core\Service\Container\Attributes\Instance;
-use Funnelnek\Core\Service\Provider;
-use Funnelnek\Core\Service\ServiceStrategy;
+use Funnelnek\Core\Container;
+use Funnelnek\Core\Container\Exception\InvalidProviderImplementationException;
+use Funnelnek\Core\Service\Exception\ServiceNotFoundException;
 use ReflectionClass;
 
-abstract class ServiceContainer implements IContainer
+abstract class ServiceContainer extends Container
 {
-    protected static array $providers = [];
-
-    /**
-     * @inheritDoc
-     */
-    public function get(string $id)
-    {
-        if (!$this->has($id)) {
-            $this->set($id);
-        }
-
-        $concrete = self::$providers[$id];
-        return $concrete->resolve();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function has(string $id): bool
-    {
-        return isset(static::$providers[$id]);
-    }
 
     public function singleton(string $provider, Closure $resolver)
     {
@@ -73,35 +51,10 @@ abstract class ServiceContainer implements IContainer
 
     public function when(string $id)
     {
-        if ($this->has($id)) {
+        if (!$this->has($id)) {
+            throw new ServiceNotFoundException();
         }
     }
-
-    // Sets Dependency Injection
-    protected function set(string $id, string|array|object $implementation = null, ServiceStrategy $strategy = ServiceStrategy::SINGLETON)
-    {
-        // Safe guard
-        if ($this->has($id)) {
-            return;
-        }
-
-        if (is_null($implementation)) {
-            $implementation = $id;
-        }
-
-        // Checks implementation is valid.
-        if (interface_exists($id) && !class_exists($implementation)) {
-            throw new InvalidProviderImplementationException();
-        }
-
-        static::$providers[$id] = new Provider($id, $implementation, $strategy);
-    }
-
-    // Resolve Class Dependencies
-    public function resolve(Provider $concrete)
-    {
-    }
-
 
     /**
      * isInstance - Checks if the object is of this class or has this class as one of its parents

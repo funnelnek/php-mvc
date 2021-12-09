@@ -39,4 +39,10 @@ class RouteServiceProvider extends ServiceProvider
             }
         }
     }
+
+    public function dispatch()
+    {
+        $url = $this->server->path();
+        Router::dispatch($url);
+    }
 }

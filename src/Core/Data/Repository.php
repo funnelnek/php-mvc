@@ -11,14 +11,14 @@ use Funnelnek\Core\Data\SQLBuilder;
 
 abstract class Repository implements IRepository
 {
-    protected static DBContextService $DB;
+    // protected static DBContextService $DB;
     protected static IQueryBuilder $query;
     protected static IModel $model;
-    private function __construct(DBContextService $db, IModel $model)
-    {
-        static::$DB = $db;
-        static::$model = $model;
-    }
+    // private function __construct(DBContextService $db, IModel $model)
+    // {
+    //     static::$DB = $db;
+    //     static::$model = $model;
+    // }
     public static function find(array $query = []): IQueryBuilder
     {
         return static::setQuery($query, DBOperation::SELECT);

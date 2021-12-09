@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Funnelnek\Core;
 
 use Funnelnek\App\Services\RouteServiceProvider;
@@ -9,22 +11,26 @@ use Funnelnek\Core\Application\ApplicationConfiguration;
 use Funnelnek\Core\Exception;
 use Funnelnek\Core\HTTP\Exception\BadRequestException;
 use Funnelnek\Core\Interfaces\IApplication;
-use Funnelnek\Core\Service\Container\ServiceContainer;
+use Funnelnek\Core\Router\Router;
+use Funnelnek\Core\Service\ServiceContainer;
 
 
 final class Application extends ServiceContainer implements IApplication
 {
-    public const Name = "Funnelnek";
     public const VERSION = "1.0.0";
+    public const Name = "Funnelnek";
 
     private static Application $instance;
     private ApplicationBuilder $builder;
-    private ?ApplicationConfiguration $config;
+
+    public readonly ApplicationConfiguration $config;
 
     private function __construct()
     {
+        parent::__construct();
         self::$instance = $this;
         $this->instance(self::class, $this);
+        $this->config = new ApplicationConfiguration($this);
         $this->builder = new ApplicationBuilder($this);
     }
 
@@ -59,6 +65,17 @@ final class Application extends ServiceContainer implements IApplication
         }
     }
 
+    public function __get(string $property)
+    {
+        switch ($property) {
+            default:
+                if (property_exists($this, $property)) {
+                    return $this[$property];
+                }
+                return null;
+        }
+    }
+
     /**
      * Method boot
      *
@@ -66,7 +83,8 @@ final class Application extends ServiceContainer implements IApplication
      */
     private function boot(): Application
     {
-        $app = $this->builder->config();
+        $this->config->load();
+        $app = $this->builder;
         $app->build();
         return $this;
     }
@@ -88,7 +106,7 @@ final class Application extends ServiceContainer implements IApplication
 
     private function serve()
     {
-        // $router = $this->get(RouteServiceProvider::class);
-        // $router->dispatch();
+        $router = $this->get(RouteServiceProvider::class);
+        $router->dispatch();
     }
 }

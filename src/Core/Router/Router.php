@@ -15,17 +15,12 @@ class Router implements IRouter
 
     // Associative array of route parameters
     protected static array $params = [];
+    protected static array $namedRoutes = [];
+    protected static ?Route $currentMatchedRoute = null;
 
     // Associative array of routes (the routing table)
-    public static array $routes = [
-        "GET" => [],
-        "POST" => [],
-        "PUT" => [],
-        "DELETE" => [],
-        "PATCH" => [],
-        "OPTION" => []
-    ];
-    protected static array $namedRoutes = [];
+    public static array $routes = [];
+
 
     /**
      * Method resolve
@@ -92,12 +87,11 @@ class Router implements IRouter
     public static function addRoute(Route $route): void
     {
         $name = $route->getName() ?? null;
-        $method = $route->getMethod();
         $targetRoute = $route->getRoute();
         $origin = $route->getOrigin();
 
         if ($origin !== $targetRoute) {
-            unset(static::$routes[$method][$origin]);
+            unset(static::$routes[$origin]);
             $route->setOrigin($targetRoute);
         }
 
@@ -105,7 +99,7 @@ class Router implements IRouter
             static::$namedRoutes[$name] = $route;
         }
 
-        static::$routes[$method][$targetRoute] = $route;
+        static::$routes[$targetRoute] = $route;
         return;
     }
 
@@ -116,9 +110,17 @@ class Router implements IRouter
      * @param string $permalink [The permalink URL.]
      * @return bool
      */
-    public static function match(string $permalink): bool
+    public static function match(string $url): bool
     {
-        return false;
+        $found = false;
+        foreach (self::$routes as $route) {
+            if ($route->isMatch($url)) {
+                $found = true;
+                self::$currentMatchedRoute = $route;
+                break;
+            }
+        }
+        return $found;
     }
 
     /**
@@ -130,5 +132,10 @@ class Router implements IRouter
      */
     public static function dispatch(string $url): void
     {
+        if (self::match($url)) {
+            $route = self::$currentMatchedRoute;
+            $controller = $route->getController();
+            call_user_func_array($controller, []);
+        }
     }
 }

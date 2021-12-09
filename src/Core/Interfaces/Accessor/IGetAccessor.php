@@ -11,5 +11,5 @@ interface IGetAccessor
      * 
      * @return any - [The value for key.]
      */
-    public function get(string $key);
+    public function get(string $key): mixed;
 }

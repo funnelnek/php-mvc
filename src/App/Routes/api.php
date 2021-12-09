@@ -6,5 +6,6 @@ use Funnelnek\App\Controller\ProductsController;
 use Funnelnek\Core\Router\Route;
 
 
-Route::get(path: '/products/{id}', controller: function (string $id) {
+Route::get(path: '/products/{id}', controller: function () {
+    echo "API controller";
 });

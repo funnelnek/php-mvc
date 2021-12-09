@@ -9,12 +9,18 @@ use Funnelnek\Core\Service\ServiceStrategy;
 class Injectiable
 {
     public function __construct(
-        protected ServiceStrategy $strategy = ServiceStrategy::SINGLETON,
+        protected ServiceStrategy $strategy = ServiceStrategy::SCOPED,
+        protected ?string $implementation = null
     ) {
     }
 
     public function type()
     {
         return $this->strategy;
+    }
+
+    public function provider()
+    {
+        return $this->implementation;
     }
 }

@@ -6,33 +6,26 @@ namespace Funnelnek\Core;
 
 use Funnelnek\Core\Application;
 use Funnelnek\Core\Application\Traits\ApplicationGetter;
-use Funnelnek\Core\Attribute\ConfigurationSettings;
 use Funnelnek\Core\Configuration\Interfaces\IConfiguration;
-use ReflectionClass;
 
 
 abstract class Configuration implements IConfiguration
 {
-    use ApplicationGetter;
-
-    private static array $configurations = [];
 
 
-    protected static function addConfiguration(string $key, Configuration $configurator)
-    {
-        self::$configurations[$key] = $configurator;
-    }
-
-    private ?Application $app;
-    private ?ConfigurationSettings $settings;
-
-    public readonly string $name;
-
+    /**
+     * Method __construct
+     *
+     * @param private $app [explicite description]
+     *
+     * @return void
+     */
+    abstract public function __construct(Application $app);
 
     /**
      * @inheritDoc
      */
-    public function get(string $key)
+    public function get(string $key): mixed
     {
         return get_value($key, $this);
     }
@@ -42,44 +35,32 @@ abstract class Configuration implements IConfiguration
      */
     public function has(string $key): bool
     {
-        return get_value($key, $this->options) !== null;
+        return get_value($key, $this) !== null;
     }
 
     /**
      * @inheritDoc
      */
-    public function load(): Configuration
+    public function set(string $name, $value): bool
     {
-        $meta = new ReflectionClass(static::class);
-        $settings = $meta->getAttributes(ConfigurationSettings::class);
-
-        // Checks if Configuration Settings exists.
-        if (count($settings)) {
-            $settings = $this->settings = $settings[0]->newInstance();
-
-            if (!isset($this->name)) {
-            }
+        if (property_exists($this, $name)) {
+            $this[$name] = $value;
+            return true;
         }
+        return false;
+    }
 
-        if (!isset(self::$configurations[static::class])) {
-        }
+    /**
+     * @inheritDoc
+     */
+    public function getOptions(): mixed
+    {
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function configure(string $name, $value): bool
-    {
-        $this[$name] = $value;
-        return true;
-    }
 
     /**
      * @inheritDoc
      */
-    public function getOptions()
-    {
-        return $this;
-    }
+    abstract public function load(): Configuration;
 }

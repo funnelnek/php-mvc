@@ -22,7 +22,7 @@ class Route implements IRoute
     public const PARAMS_REPLACEMENT_PATTERN = '(?<$1>$2)';
     public const PATH_WILDCARD_PATTERN = '/\*/';
     public const PATH_WILDCARD_REPLACEMENT = '[^\\/]';
-    public const DEFAULT_PATH_CAPTURE_PATTERN = '[:[word]:\-]+';
+    public const DEFAULT_PATH_CAPTURE_PATTERN = '[\w\-]+';
     public const DEFAULT_API_PATH_CAPTURE_PATTERN = '/^(?<controller>' . Route::DEFAULT_PATH_CAPTURE_PATTERN . ')\/(?<action>' . Route::DEFAULT_PATH_CAPTURE_PATTERN . ')$/i';
 
 
@@ -60,9 +60,8 @@ class Route implements IRoute
      * Adds a HTTP GET route
      * @param string $path [explicite description]
      * @param string|array|Closure $controller [explicite description]
-     * @param bool $exact [explicite description]
      *
-     * @return void
+     * @return Route
      */
     public static function get(
         string $path,

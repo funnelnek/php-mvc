@@ -2,8 +2,10 @@
 
 namespace Funnelnek\App\Routes\Public;
 
-use Funnelnek\App\Controller\ProductsController;
+use Funnelnek\App\Http\Controller\ProductsController;
 use Funnelnek\Core\Router\Route;
 
 
-Route::get(path: '/products/{id}', controller: [ProductsController::class, "findById"])->where('id', '\d+');
+Route::get(path: '/products/{id}', controller: function () {
+    echo "Web Controller";
+})->where('id', '\d+');

@@ -11,7 +11,7 @@ class Exception extends GlobalException
     protected const MESSAGE = "(type - err:code): name - message - space";
     protected const CODE = 0;
 
-    protected string $name;
+    protected string $name = "Generic Exception";
 
     public function __construct(string $message = "", int $code = 0, protected ?Throwable $previous = null)
     {
