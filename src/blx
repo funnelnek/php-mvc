@@ -1,0 +1,13 @@
+#!/usr/bin/php
+<?php require_once 'vendor/autoload.php';
+
+use Funnelnek\CLI\Console;
+
+if ($argc == 1 || !isset($argv[1])) : ?>
+    This is a command line application use --help to get available commands
+<?php
+    exit();
+endif;
+
+array_shift($argv);
+Console::run($argv);

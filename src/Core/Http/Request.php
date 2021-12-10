@@ -2,11 +2,8 @@
 
 namespace Funnelnek\Core\Http;
 
-use Exception;
-use Funnelnek\Configuration\Constant\Settings;
-use Funnelnek\Core\Attribute\Service\InjectionStrategy;
 use Funnelnek\Core\Http\Interfaces\IRequest;
-use Funnelnek\Core\Module\Application;
+use Funnelnek\Core\Application;
 
 class Request implements IRequest
 {

@@ -22,7 +22,7 @@ interface IRequest extends IMessage
      *
      * @return string
      */
-    public function getRequestTarget();
+    public function getRequestTarget(): string;
 
     /**
      * Return an instance with the specific request-target.
@@ -48,7 +48,7 @@ interface IRequest extends IMessage
      *
      * @return string Returns the request method.
      */
-    public function getMethod();
+    public function getMethod(): string;
 
     /**
      * Return an instance with the provided HTTP method.
@@ -65,7 +65,7 @@ interface IRequest extends IMessage
      * @return static
      * @throws \InvalidArgumentException for invalid HTTP methods.
      */
-    public function withMethod($method);
+    public function withMethod($method): static;
 
     /**
      * Retrieves the URI instance.
@@ -76,7 +76,7 @@ interface IRequest extends IMessage
      * @return UriInterface Returns a UriInterface instance
      *     representing the URI of the request.
      */
-    public function getUri();
+    public function getUri(): IUri;
 
     /**
      * Returns an instance with the provided URI.
@@ -108,5 +108,5 @@ interface IRequest extends IMessage
      * @param bool $preserveHost Preserve the original state of the Host header.
      * @return static
      */
-    public function withUri(IUri $uri, $preserveHost = false);
+    public function withUri(IUri $uri, $preserveHost = false): static;
 }

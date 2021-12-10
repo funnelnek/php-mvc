@@ -13,5 +13,5 @@ interface ILoadableConfiguration extends ILoadable
      * 
      * @return Configuration
      */
-    public function load(): Configuration;
+    public function load(): static;
 }

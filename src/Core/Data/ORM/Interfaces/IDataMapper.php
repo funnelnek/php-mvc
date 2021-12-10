@@ -6,4 +6,5 @@ namespace Funnelnek\Core\Data\ORM;
 
 interface IDataMapper
 {
+    public function map($column, $property): mixed;
 }

@@ -5,13 +5,12 @@ namespace Funnelnek\Core;
 
 
 use Funnelnek\Core\Application;
-use Funnelnek\Core\Application\Traits\ApplicationGetter;
 use Funnelnek\Core\Configuration\Interfaces\IConfiguration;
-
+use Funnelnek\Core\Traits\Accessor\ArrayAccessor;
 
 abstract class Configuration implements IConfiguration
 {
-
+    use ArrayAccessor;
 
     /**
      * Method __construct
@@ -20,7 +19,7 @@ abstract class Configuration implements IConfiguration
      *
      * @return void
      */
-    abstract public function __construct(Application $app);
+    abstract public function __construct(Application $app, mixed ...$args);
 
     /**
      * @inheritDoc
@@ -62,5 +61,15 @@ abstract class Configuration implements IConfiguration
     /**
      * @inheritDoc
      */
-    abstract public function load(): Configuration;
+    public function load(): static
+    {
+        switch ($this->loaded) {
+            case false:
+                $this->boot();
+            default:
+                return $this;
+        }
+    }
+
+    abstract protected function boot(): void;
 }

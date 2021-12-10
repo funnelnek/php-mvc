@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Funnelnek\App\DB\Attributes;
+namespace Funnelnek\App\Database;
 
 use Funnelnek\App\Controller\CategoriesController;
 use Funnelnek\App\Controller\ProductsController;
@@ -10,9 +10,9 @@ use Funnelnek\App\Model\Category;
 use Funnelnek\App\Model\Product;
 use Funnelnek\App\Repository\CategoryRepository;
 use Funnelnek\App\Repository\ProductRepository;
-use Funnelnek\App\Services\CatalogService;
-use Funnelnek\App\Services\ProductService;
-use Funnelnek\Configuration\DB\DatabaseConfiguration;
+use Funnelnek\App\Services\CatalogServiceProvider;
+use Funnelnek\App\Services\ProductServiceProvider;
+use Funnelnek\Configuration\Database\EcommerceDatabaseConfiguration;
 use Funnelnek\Core\Data\DBContext;
 use Funnelnek\Core\Data\Attribute\DBSet;
 use Funnelnek\Core\Data\DatabaseContext;
@@ -21,9 +21,9 @@ use PDO;
 
 #[DBContext(
     driver: PDO::class,
-    configuration: DatabaseConfiguration::class,
+    configuration: EcommerceDatabaseConfiguration::class,
 )]
-class StoreDB extends DatabaseContext
+class EcommerceDatabase extends DatabaseContext
 {
     #[DBSet(
         name: "products",
@@ -31,7 +31,7 @@ class StoreDB extends DatabaseContext
         repository: ProductRepository::class,
         controller: ProductsController::class
     )]
-    public ProductService $Products;
+    public ProductServiceProvider $products;
 
     #[DBSet(
         name: 'categories',
@@ -39,5 +39,11 @@ class StoreDB extends DatabaseContext
         repository: CategoryRepository::class,
         controller: CategoriesController::class
     )]
-    public CatalogService $Categories;
+    public CatalogServiceProvider $categories;
+
+
+    public function __construct(
+        private EcommerceDatabaseConfiguration $config
+    ) {
+    }
 }

@@ -1,10 +1,8 @@
 <?php
 
-namespace Funnelnek\Configuration\Exception;
+use Funnelnek\Core\Exception\ConfigurationException;
 
-use Funnelnek\Core\Exception\Exception;
-
-class InstallationException extends Exception
+class InstallationException extends ConfigurationException
 {
     public function __construct($message)
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Funnelnek\App\Repository;
+namespace Funnelnek\App\Repositories;
 
 use Funnelnek\App\Model\Category;
 use Funnelnek\Core\Data\DBContext;

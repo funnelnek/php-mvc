@@ -3,11 +3,16 @@
 namespace Funnelnek\Core\Data;
 
 use Funnelnek\Core\Data\Interfaces\IDatabaseConnection;
-use Funnelnek\Core\Data\ORM\DataMapper;
 
 
 class DatabaseConnection implements IDatabaseConnection
 {
+
+
+    public function __construct(private $credentials)
+    {
+    }
+
     public function open()
     {
     }

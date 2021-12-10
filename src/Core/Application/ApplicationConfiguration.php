@@ -20,6 +20,7 @@ class ApplicationConfiguration extends Configuration
 
     public function __construct(private Application $app)
     {
+        $app->singleton(ApplicationConfiguration::class, fn (Application $app) => $this);
     }
 
     /**

@@ -1,11 +1,10 @@
 <?php
 
-namespace Funnelnek\Core\Module;
+namespace Funnelnek\Core;
 
 class Middleware
 {
     public function __construct()
     {
-        
     }
 }

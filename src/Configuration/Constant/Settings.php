@@ -29,4 +29,6 @@ class Settings
     final public const CONFIGURATION_FILE = Settings::CONFIG_DIR . "/config.php";
     final public const WEB_ROUTES_FILE = Settings::ROOT_DIR . "/www.php";
     final public const API_ROUTES_FILE = Settings::ROOT_DIR . "/api.php";
+
+    final public const SUPPORTED_FILE_EXTENSIONS_PATTERN = "php|txt|html?|s?css|js[xs]?|tsx?|bin|json|xml|sql|jpe?g|gif|svg|webp|png|[tc]sv|docx?|xlsx?|yml";
 }
