@@ -2,24 +2,17 @@
 
 namespace Funnelnek\CLI\Command\Interfaces;
 
+use Funnelnek\CLI\Interfaces\IActionEvent;
 use Funnelnek\CLI\Interfaces\IStdIn;
 
-interface ICommand
+interface ICommand extends IActionEvent
 {
     /**
-     * Method dispatch
-     * 
-     * @param array $args [explicite description]
+     * Dispatch the action command. - ** Dependency Injectable **
+     * @param mixed $args 
+     * The command line arguments.
      *
      * @return void
      */
-    public static function dispatch(array $args): void;
-
-
-    /**
-     * Method execute
-     *
-     * @return void
-     */
-    public function execute(): void;
+    public static function execute(mixed ...$args): void;
 }

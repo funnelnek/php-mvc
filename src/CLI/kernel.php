@@ -1,13 +1,11 @@
 <?php
 
-use Funnelnek\CLI\Command\Help;
-use Funnelnek\CLI\Command\Migration;
+use Funnelnek\CLI\Console\ConsoleCachePreloader;
 
 return [
-    "commands" => [
-        "migration" => Migration::class
+    "cache" => [
+        "enabled" => true,
+        "preload" => ConsoleCachePreloader::class
     ],
-    "options" => [
-        "--help" => Help::class
-    ]
+    "commands" => []
 ];

@@ -29,9 +29,9 @@ final class Application extends ServiceContainer implements IApplication
     {
         parent::__construct();
         self::$instance = $this;
+        $this->config   = new ApplicationConfiguration($this);
+        $this->builder  = new ApplicationBuilder($this);
         $this->instance(self::class, $this);
-        $this->config = new ApplicationConfiguration($this);
-        $this->builder = new ApplicationBuilder($this);
     }
 
     //Run Application

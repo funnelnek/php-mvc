@@ -110,6 +110,7 @@ class Route implements IRoute
     {
         return new Route(HttpMethods::PATCH, $path, $controller);
     }
+
     /**
      * Method delete
      *

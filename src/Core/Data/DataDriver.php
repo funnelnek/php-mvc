@@ -2,6 +2,10 @@
 
 namespace Funnelnek\Core\Data;
 
-abstract class DataDriver
+use Funnelnek\Core\Data\Interfaces\IDataDriver;
+
+abstract class DataDriver implements IDataDriver
 {
+    protected string $name;
+    protected string $connectionString;
 }

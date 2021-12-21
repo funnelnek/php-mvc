@@ -4,17 +4,27 @@ namespace Funnelnek\Core\Traits\Accessor;
 
 trait ArrayAccessor
 {
-    public function offsetExists(mixed $offset): bool
+    public function offsetSet($property, $value)
     {
-        return true;
+        if (is_null($property)) {
+            return null;
+        } else {
+            $this->$property = $value;
+        }
     }
-    public function offsetGet(mixed $offset): mixed
+
+    public function offsetExists($property)
     {
+        return isset($this->$property);
     }
-    public function offsetSet(mixed $offset, mixed $value): void
+
+    public function offsetUnset($property)
     {
+        unset($this->$property);
     }
-    public function offsetUnset(mixed $offset): void
+
+    public function offsetGet($property)
     {
+        return isset($this->$property) ? $this->$property : null;
     }
 }

@@ -5,6 +5,6 @@ namespace Funnelnek\Core\Data;
 use PDO;
 use PDOException;
 
-class SqlDatabase extends PDO
+class SqlDatabase extends Database
 {
 }

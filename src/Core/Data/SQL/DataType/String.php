@@ -13,4 +13,16 @@ enum StringType
     case BLOB;
     case ENUM;
     case SET;
+
+    public function getMappingOfType(string $type)
+    {
+        $mapped = null;
+        switch (strtolower($type)) {
+            case "CHARACTER VARYING":
+            case "CHARACTER":
+                $mapped = StringType::VARCHAR;
+                break;
+        }
+        return $mapped;
+    }
 }

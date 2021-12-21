@@ -1,0 +1,14 @@
+#!/usr/bin/php
+<?php require_once 'vendor/autoload.php';
+
+use Funnelnek\CLI\Command;
+use Funnelnek\CLI\Command\Action\ActionDispatch;
+use Funnelnek\CLI\Console;
+use Funnelnek\CLI\Traits\Command\CommandLineCompiler;
+
+// $args = [
+//     "file" => array_shift($argv),
+//     "argc" => $argc,
+//     "argv" => $argv
+// ];
+Console::run();

@@ -2,8 +2,6 @@
 
 namespace Funnelnek\CLI\Traits;
 
-use Funnelnek\Core\Interfaces\Stream\IReadable;
-
 trait StdIn
 {
     /**

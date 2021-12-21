@@ -1,6 +1,6 @@
 <?php
 
-namespace Funnelnek\Core\Traits\Product\Model;
+namespace Funnelnek\Core\Ecommerce\Traits\Product\Model;
 
 use Funnelnek\Core\Data\Attribute\Definition\BOOLEAN;
 use Funnelnek\Core\Data\Attribute\Definition\DECIMAL;
@@ -10,6 +10,7 @@ use Funnelnek\Core\Data\Attribute\Definition\FOREIGN_KEY;
 use Funnelnek\Core\Data\Attribute\Definition\REQUIRED;
 use Funnelnek\Core\Data\Attribute\Definition\UNIQUE;
 use Funnelnek\Core\Data\Attribute\Definition\VARCHAR;
+
 
 trait BaseProduct
 {

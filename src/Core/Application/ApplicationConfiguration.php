@@ -41,10 +41,10 @@ class ApplicationConfiguration extends Configuration
         return true;
     }
 
-    public function load(): Configuration
+    public function load(): static
     {
-        $app = $this->app;
-        $options = $this->getConfigurationFile();
+        $app          = $this->app;
+        $options      = $this->getConfigurationFile();
         $configurator = null;
 
         if (isset($options)) {
@@ -56,6 +56,10 @@ class ApplicationConfiguration extends Configuration
         }
 
         return $this;
+    }
+
+    protected function boot(): void
+    {
     }
 
     /**
